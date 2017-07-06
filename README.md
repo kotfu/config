@@ -8,6 +8,11 @@ My collection of home directory config files, including various bash tools
 
         source ~/config/bashrc
 
+## Prerequisites
+You'll need bash, and also the following command line tools
+- git
+- curl
+
 ## Customizing
 
 You can customize various behaviors by setting environment variables in
@@ -26,7 +31,6 @@ specific, and not in the config repo
 ## Todo
 
 - bash completion https://github.com/scop/bash-completion
-- iTerm2 shell integration tools
 - get https://github.com/rupa/z
 - https://github.com/clvv/fasd
 - https://github.com/junegunn/fzf - from brew?

@@ -23,7 +23,7 @@ bd_source less.sh
 bd_source ls.sh
 bd_source editor.sh
 bd_source commacd.bash
-bd_source iterm2.sh
+bd_source iterm2_shell_integration.bash
 bd_source rvm.sh
 
 # give a chance for a per-host-not-part-of-config to override anything
