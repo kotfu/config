@@ -33,3 +33,4 @@ the config repo
 - figure out a way to auto-update the third party stuff
 - bbedit support in EDITORS
 - local copy of lesspipe?
+
