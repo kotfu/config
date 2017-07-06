@@ -4,6 +4,7 @@
 if [ -z ${CONFIG_DIR+x} ]; then
     CONFIG_DIR=~/config
 fi
+export CONFIG_DIR
 
 BASH_DIR=$CONFIG_DIR/bash.d
 

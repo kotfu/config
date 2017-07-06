@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# update the config repository and get third party dependencies
+
+# update our git repo
+cd $CONFIG_DIR
+git pull
+git submodule init
+git submodule update
+
+# update all of our submodules
+#for mod in $( ls submodules ); do
+#    cd $CONFIG_DIR/submodules/$mod
+#    git pull
+#done

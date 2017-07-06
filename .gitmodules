@@ -1,0 +1,3 @@
+[submodule "submodules/commacd"]
+	path = submodules/commacd
+	url = https://github.com/shyiko/commacd.git
