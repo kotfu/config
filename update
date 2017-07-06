@@ -13,3 +13,5 @@ git submodule update
 #    cd $CONFIG_DIR/submodules/$mod
 #    git pull
 #done
+
+source bashrc
