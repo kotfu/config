@@ -14,4 +14,5 @@ git submodule update
 #    git pull
 #done
 
-source bashrc
+echo
+echo 'Update complete. Type "source $CONFIG_DIR/bashrc" to update your current shell.'
