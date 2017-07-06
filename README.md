@@ -30,7 +30,6 @@ specific, and not in the config repo
 - get https://github.com/rupa/z
 - https://github.com/clvv/fasd
 - https://github.com/junegunn/fzf - from brew?
-- figure out a way to auto-update the third party stuff
 - bbedit support in EDITORS
 - local copy of lesspipe?
 

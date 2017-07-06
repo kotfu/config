@@ -6,7 +6,7 @@
 cd $CONFIG_DIR
 git pull
 git submodule init
-git submodule update
+git submodule update --recursive
 
 # update all of our submodules
 #for mod in $( ls submodules ); do
@@ -15,4 +15,4 @@ git submodule update
 #done
 
 echo
-echo Update complete. Type \"source $CONFIG_DIR/bashrc\" to update your current shell.
+echo Update complete. Type 'source $CONFIG_DIR/bashrc' to update your current shell.
