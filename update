@@ -15,4 +15,4 @@ git submodule update
 #done
 
 echo
-echo 'Update complete. Type "source $CONFIG_DIR/bashrc" to update your current shell.'
+echo Update complete. Type \"source $CONFIG_DIR/bashrc\" to update your current shell.
