@@ -3,13 +3,13 @@
 
 function l () {
     if [ $# -eq 0 ]; then
-        local LSCMD="ls -l"
+        local LSCMD="ls -lh"
         local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
     else
         if [[ "$@" =~ ^- ]]; then
-            local LSCMD="ls -l $@"
+            local LSCMD="ls -lh $@"
         else
-            local LSCMD="ls -ld $@"
+            local LSCMD="ls -lhd $@"
         fi
         local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
     fi
@@ -25,13 +25,13 @@ function l () {
 
 function la() {
     if [ $# -eq 0 ]; then
-        local LSCMD="ls -Al"
+        local LSCMD="ls -Alh"
         local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
     else
         if [[ "$@" =~ ^- ]]; then
-            local LSCMD="ls -Al $@"
+            local LSCMD="ls -Alh $@"
         else
-            local LSCMD="ls -Ald $@"
+            local LSCMD="ls -Alhd $@"
         fi
         #local LSCMD="ls -Al $@"
         local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))

@@ -36,4 +36,4 @@ specific, and not in the config repo
 - https://github.com/junegunn/fzf - from brew?
 - bbedit support in EDITORS
 - local copy of lesspipe?
-
+- get la() to show dotfiles first and then regular files
