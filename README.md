@@ -31,6 +31,9 @@ specific, and not in the config repo
 ## Todo
 
 - bash completion https://github.com/scop/bash-completion
+- bd https://github.com/vigneshwaranr/bd
+- add .inputrc
+- check out https://github.com/shyiko/dotfiles
 - get https://github.com/rupa/z?
 - https://github.com/clvv/fasd
 - https://github.com/junegunn/fzf - from brew?
