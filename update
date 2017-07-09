@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 #
 # update the config repository and get third party dependencies
+if [ -z ${CONFIG_DIR+x} ]; then
+    echo "Please set CONFIG_DIR to point to the directory of the config repo"
+    exit 1
+fi
+if [ ! -d $CONFIG_DIR ]; then
+    echo "Please set CONFIG_DIR to point to the directory of the config repo"
+    exit 1
+fi
 
 # update our git repo
 cd $CONFIG_DIR
@@ -8,14 +16,9 @@ git pull
 git submodule init
 git submodule update --recursive
 
-# update all of our submodules
-#for mod in $( ls submodules ); do
-#    cd $CONFIG_DIR/submodules/$mod
-#    git pull
-#done
-
+# update iterm2 shell integration
 curl -L https://iterm2.com/misc/bash_startup.in \
 -o bash.d/iterm2_shell_integration.bash
 
 echo
-echo Update complete. Type \"'source $CONFIG_DIR/bashrc'\" to update your current shell.
+echo Update complete. Type \""source $CONFIG_DIR/bashrc"\" to update your current shell.
