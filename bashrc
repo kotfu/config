@@ -4,6 +4,10 @@
 if [ -z ${CONFIG_DIR+x} ]; then
     CONFIG_DIR=~/config
 fi
+if [ ! -d $CONFIG_DIR ]; then
+    echo "Please set CONFIG_DIR to point to the directory of the config repo"
+    return
+fi
 export CONFIG_DIR
 
 BASH_DIR=$CONFIG_DIR/bash.d
