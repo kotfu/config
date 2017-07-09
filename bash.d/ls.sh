@@ -4,15 +4,15 @@
 function l () {
     if [ $# -eq 0 ]; then
         local LSCMD="ls -lh"
-        local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
     else
         if [[ "$@" =~ ^- ]]; then
             local LSCMD="ls -lh $@"
         else
             local LSCMD="ls -lhd $@"
         fi
-        local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
     fi
+    local LSCNT=$( $LSCMD 2>/dev/null | wc -l )
+    #LSCNT=$(( $LSCNT + 0 ))
 
     if [ $LSCNT -ge $LINES ]; then
         eval "$LSCMD | grep -v '^total' | less -e"
@@ -23,17 +23,16 @@ function l () {
 
 function la() {
     if [ $# -eq 0 ]; then
-        local LSCMD="(ls -lhd .* && ls -lhd *)"
-        local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
+        local LSCMD="( ls -lhd .* && ls -lhd * )"
     else
         if [[ "$@" =~ ^- ]]; then
             local LSCMD="ls -Alh $@"
         else
             local LSCMD="ls -Alhd $@"
         fi
-        #local LSCMD="ls -Al $@"
-        local LSCNT=$(( $( $LSCMD 2>/dev/null | wc -l) + 0 ))
     fi
+    local LSCNT=$(eval $LSCMD 2>/dev/null | wc -l)
+    #LSCNT=$(( $LSCNT + 0 ))
 
     if [ $LSCNT -ge $LINES ]; then
         eval "$LSCMD | grep -v '^total' | less -e"
