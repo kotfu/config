@@ -1,1 +1,5 @@
+# backup files
+*~
+
+# installed dynamically
 /bash.d/iterm2_shell_integration.bash
