@@ -38,6 +38,7 @@ _bd_source commacd.bash
 _bd_source bd.bash
 _bd_source iterm2_shell_integration.bash
 _bd_source rvm.bash
+_bd_source virtualenvwrapper.bash
 _bd_source bash_completion.bash
 
 _assure_in_path "$CONFIG_DIR/bin"
