@@ -34,10 +34,17 @@ if [[ $OSTYPE =~ darwin* ]]; then
     brew update
 
     # install bash completion
-    BCTWO=$( brew list | grep bash-completion@2 )
-    if [ -z ${BCTWO+x} ]; then
+    GOTIT=$( brew list | grep bash-completion@2 )
+    if [ -z ${GOTIT+x} ]; then
         brew install bash-completion@2
     fi
+    
+    # install lesspipe
+    GOTIT=$( brew list | grep lesspipe )
+    if [ -z ${GOTIT+x} ]; then
+        brew install lesspipe
+    fi
+    
 fi
 
 echo

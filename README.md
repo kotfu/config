@@ -4,9 +4,14 @@ My collection of home directory config files, including various bash tools
 ## How to install
 
 - Clone this repository to ~/config
+- Type ```~/config/update```
 - add the following line to ```~/.bashrc``` or ```~/.profile```:
 
         source ~/config/bashrc
+
+## Updating
+
+- type ```~/config/update``` to update the git repo and download updates to third party tools
 
 ## Prerequisites
 You'll need bash, and also the following command line tools
