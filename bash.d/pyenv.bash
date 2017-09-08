@@ -1,7 +1,7 @@
 #
 # if virtualenvwrapper is installed, activate it
 
-PYENV=$(which pyenv)
+PYENV=$(which pyenv 2>/dev/null)
 if [ $? == 0 ]; then
     eval "$(pyenv init -)"
     VENV=$(pyenv virtualenv-init -)
