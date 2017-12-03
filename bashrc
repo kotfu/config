@@ -35,6 +35,7 @@ _bd_source less.bash
 _bd_source ls.bash
 _bd_source editor.bash
 _bd_source commacd.bash
+_bd_source bashmarks.bash
 _bd_source bd.bash
 _bd_source iterm2_shell_integration.bash
 _bd_source rvm.bash

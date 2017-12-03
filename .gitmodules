@@ -4,3 +4,6 @@
 [submodule "submodules/bd"]
 	path = submodules/bd
 	url = https://github.com/vigneshwaranr/bd.git
+[submodule "submodules/bashmarks"]
+	path = submodules/bashmarks
+	url = https://github.com/huyng/bashmarks.git
