@@ -32,7 +32,6 @@ function _assure_in_path {
 _bd_source shellopts.bash
 _bd_source alias.bash
 _bd_source less.bash
-_bd_source ls.bash
 _bd_source editor.bash
 _bd_source commacd.bash
 _bd_source bashmarks.bash
@@ -41,6 +40,7 @@ _bd_source iterm2_shell_integration.bash
 _bd_source rvm.bash
 _bd_source pyenv.bash
 _bd_source virtualenvwrapper.bash
+_bd_source ls.bash
 _bd_source bash_completion.bash
 
 _assure_in_path "$CONFIG_DIR/bin"
