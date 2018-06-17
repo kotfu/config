@@ -2,4 +2,4 @@
 *~
 
 # installed dynamically
-/bash.d/iterm2_shell_integration.bash
+lib/iterm2_shell_integration.bash
