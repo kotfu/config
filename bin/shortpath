@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# output the shortest possible reference to the path
+#
+# TODO handle paths with spaces, i.e. output quotes if we need them
+
+if [ -z "$1" ]; then
+   echo
+   exit 0
+fi
+
+SHORT=$1
+# if the requested path starts with the current working directory
+# remove it
+SHORT=${SHORT#$PWD/}
+
+# now replace $HOME with ~
+echo ${SHORT/#$HOME/'~'}

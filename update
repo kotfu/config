@@ -11,7 +11,7 @@ if [ ! -d $CONFIG_DIR ]; then
 fi
 
 # save the friendly path to bashrc
-FRIENDLY_PATH=$(friendlypath $CONFIG_DIR/bashrc)
+SHORTPATH=$(shortpath $CONFIG_DIR/bashrc)
 
 # update our git repo
 cd $CONFIG_DIR
@@ -51,4 +51,4 @@ if [[ $OSTYPE =~ darwin* ]]; then
 fi
 
 echo
-echo Update complete. Type \""source $FRIENDLY_PATH"\" to update your current shell.
+echo Update complete. Type \""source $SHORTPATH"\" to update your current shell.
