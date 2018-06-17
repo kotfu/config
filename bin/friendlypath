@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+#
+# output the shortest possible reference to the path
+#
+# TODO handle paths with spaces, i.e. output quotes if we need them
+
+if [ -z "$1" ]; then
+   echo
+   exit 0
+fi
+
+# first try and make a relative path
+if [ $PWD == "/" ]; then
+   PTH="$1"
+else
+   # this has the downside of requiring all the files
+   # to exist
+   PTH=$(realpath --relative-base=. "$1")
+   RPEXIT=$?
+   if [ $RPEXIT != 0 ]; then
+      exit $RPEXIT
+   fi
+fi
+
+# now replace $HOME with ~
+echo ${PTH/#$HOME/'~'}

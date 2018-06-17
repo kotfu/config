@@ -47,5 +47,7 @@ if [[ $OSTYPE =~ darwin* ]]; then
     
 fi
 
+PTH=$(friendlypath $CONFIG_DIR/bashrc)
+
 echo
-echo Update complete. Type \""source $CONFIG_DIR/bashrc"\" to update your current shell.
+echo Update complete. Type \""source $PTH"\" to update your current shell.
