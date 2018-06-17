@@ -1,0 +1,3 @@
+#
+# ignore files retrieved dynamically
+iterm2_shell_integration.bash
