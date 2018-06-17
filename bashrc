@@ -19,7 +19,7 @@ function _bd_source {
 
 }
 
-# prepend an entry to our path, makeing sure not to add duplicates
+# prepend an entry to our path, making sure not to add duplicates
 function _assure_in_path {
     # we use 0 for true, or success, like most other shell commands
     local TESTPATH=$1
@@ -27,6 +27,8 @@ function _assure_in_path {
         PATH="$TESTPATH:$PATH"
     fi
 }
+
+_assure_in_path "$CONFIG_DIR/bin"
 
 # source our various config files
 _bd_source shellopts.bash
@@ -43,7 +45,6 @@ _bd_source virtualenvwrapper.bash
 _bd_source ls.bash
 _bd_source bash_completion.bash
 
-_assure_in_path "$CONFIG_DIR/bin"
 
 # give a chance for a per-host-not-part-of-config to override anything
 if [ -r ~/.localprofile ]; then
