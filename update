@@ -27,9 +27,9 @@ git submodule update --recursive
 echo
 echo Configuring bd:
 rm -f bin/bd
-ln -s submodules/bd/bd bin/bd
+ln -s $CONFIG_DIR/submodules/bd/bd bin/bd
 rm -f bash_completion.d/bd
-ln -s submodules/bd/bash_completion.d/bd bash_completion.d/bd
+ln -s $CONFIG_DIR/submodules/bd/bash_completion.d/bd bash_completion.d/bd
 
 echo
 echo Retrieving iterm2 shell integration:
