@@ -1,0 +1,4 @@
+#
+# ignore symlinks created by update
+bashmarks.bash
+commacd.bash
