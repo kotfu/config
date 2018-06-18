@@ -25,6 +25,13 @@ git submodule init
 git submodule update --recursive
 
 echo
+echo Configuring bd:
+rm -f bin/bd
+ln -s submodules/bd/bd bin/bd
+rm -f bash_completion.d/bd
+ln -s submodules/bd/bash_completion.d/bd bash_completion.d/bd
+
+echo
 echo Retrieving iterm2 shell integration:
 curl -L https://iterm2.com/misc/bash_startup.in \
 -o lib/iterm2_shell_integration.bash
