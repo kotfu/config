@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # check if we are running iterm2
 # from https://groups.google.com/forum/#!topic/iterm2-discuss/MpOWDIn6QTs
 
