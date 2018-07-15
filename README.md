@@ -3,39 +3,36 @@ My collection of home directory config files, including various bash tools
 
 ## How to install
 
-- Clone this repository to ~/config
-- Type ```~/config/update```
-- add the following line to ```~/.bashrc``` or ```~/.profile```:
+- Clone this repository to `~/config`
+
+    ```$ git clone https://github.com/kotfu/config.git ~/config```
+
+- Type `~/config/update`
+- add the following line to `~/.bashrc` or `~/.profile`:
 
         source ~/config/bashrc
 
 ## Updating
 
-- type ```~/config/update``` to update the git repo and download updates to third party tools
+- type `~/config/update` to update the git repo and download updates to third party tools
 
 ## Prerequisites
+
 You'll need bash, and also the following command line tools
 - git
 - curl
 
 ## Customizing
 
-You can customize various behaviors by setting environment variables in
-```.bashrc``` or ```.profile``` before you source ```~/config/bashrc```
+If you put the git repo somewhere besides `~/config`, set
+the `CONFIG_DIR` variable to the directory where you put the repo
 
-CONFIG_DIR - if you put the git repo somewhere besides ```~/config```, set
-this variable to the directory where you put the repo
-
-```~/.localprofile``` - this file gets sourced very last, so you can
-override or add anything that you want. This file is intended to be host
-specific, and not in the config repo
-
-
-
+  If you have anything that it unique to the current machine that you want to
+  have run when you log in, put it in `~/.localprofile`. This file gets sourced
+  very last, and is intended to be host specific, and not in the config repo.
 
 ## Todo
 
-- add .inputrc
 - check out https://github.com/shyiko/dotfiles
 - get https://github.com/rupa/z?
 - https://github.com/clvv/fasd
