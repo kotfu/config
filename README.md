@@ -39,4 +39,3 @@ the `CONFIG_DIR` variable to the directory where you put the repo
 - https://github.com/junegunn/fzf - from brew?
 - bbedit support in EDITORS
 - local copy of lesspipe? https://github.com/wofr06/lesspipe
-- get la() to show dotfiles first and then regular files
