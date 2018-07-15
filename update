@@ -68,4 +68,11 @@ if [[ $OSTYPE =~ darwin* ]]; then
 fi
 
 echo
+echo Installing dotfiles:
+for FILE in $(ls -A dotfiles); do
+    rm ~/$FILE
+    ln -s $CONFIG_DIR/dotfiles/$FILE ~/$FILE
+done
+
+echo
 echo Update complete. Type \""source $SHORTPATH"\" to update your current shell.
