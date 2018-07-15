@@ -1,0 +1,4 @@
+# .inputrc for bash readline
+
+set editing-mode emacs
+set bell-style visible
