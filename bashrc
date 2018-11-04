@@ -16,7 +16,6 @@ function _bd_source {
     if [ -r $BASH_DIR/$1 ]; then
         source $BASH_DIR/$1
     fi
-
 }
 
 # prepend an entry to our path, making sure not to add duplicates

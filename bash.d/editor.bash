@@ -1,8 +1,13 @@
 #
-# set EDITOR
+# set EDITOR, preferred choices are later in the list
 
-ZILE=$(which zile)
-if [ $? -eq 0 ]; then
-    alias ue=$ZILE
-fi
-export EDITOR=$ZILE
+EDITORS=(zile emacs)
+
+for ED in "${EDITORS[@]}"
+do
+    FULLPATH=$(which $ED)
+    if [ $? -eq 0 ]; then
+        alias ue=$FULLPATH
+        export EDITOR=$FULLPATH
+    fi
+done
