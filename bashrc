@@ -30,6 +30,7 @@ function _assure_in_path {
 _assure_in_path "$CONFIG_DIR/bin"
 
 # source our various config files
+_bd_source homebin.bash
 _bd_source shellopts.bash
 _bd_source alias.bash
 _bd_source less.bash
