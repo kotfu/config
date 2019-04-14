@@ -2,8 +2,11 @@
 #
 
 import argparse
+import calendar
 import datetime
 
+#
+# set up some arrays for argument parsing
 modes = [
     'next', 'n',
     'nextweek', 'nw',
@@ -16,41 +19,92 @@ modes_map = {
     'l':'last',
     'lw':'lastweek',
 }
+days = list(calendar.day_name)
+days.extend(list(calendar.day_abbr))
+days_map = {}
+daynum = 0
+for day in calendar.day_name:
+    days_map[day.lower()] = daynum
+    daynum += 1
+daynum = 0
+for day in calendar.day_abbr:
+    days_map[day.lower()] = daynum
+    daynum += 1
 
+#
+# classes for argparse
+class ModeAction(argparse.Action):
+    """Argparse action for the mode argument"""
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        if nargs is not None:
+            raise ValueError("nargs not allowed")
+        super(ModeAction, self).__init__(option_strings, dest, **kwargs)
+    def __call__(self, parser, namespace, values, option_string=None):
+        try:
+            values = modes_map[values]
+        except KeyError:
+            # we aren't mapping the mode, just keep it as is
+            pass
+        setattr(namespace, self.dest, values)
 
-parser = argparse.ArgumentParser(
-    description="shift dates by days of the week"
-)
-parser.add_argument('mode', choices=modes, help="next, nextweek, last, lastweek")
-parser.add_argument('dayofweek', help="which day of the week")
-args = parser.parse_args()
+class DayAction(argparse.Action):
+    """Argparse action for the day of the week argument"""
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        if nargs is not None:
+            raise ValueError("nargs not allowed")
+        super(DayAction, self).__init__(option_strings, dest, **kwargs)
+    def __call__(self, parser, namespace, values, option_string=None):
+        try:
+            values = days_map[values.lower()]
+        except KeyError:
+            raise ValueError('Could not interpret {} as a day of the week.'.format(values))
+        setattr(namespace, self.dest, values)
 
-print('mode={}'.format(args.mode))
-print('dayofweek={}'.format(args.dayofweek))
+#
+# functions for each of the various modes
+def last(weekday):
+    """find the last date of a given day of the week
 
-(mode, dayofweek) = interpret_args(args)
+    If today is friday, and you ask for the last tuesday, you will
+    get the date three days ago.
 
-
-# weekday 0=Mon, 1=Tue...
-
-def interpret_args(args)
-    """validate and interpret the command line arguments
-
-    mode will be one of ['next', 'nextweek', 'last', 'lastweek']
+    If today is wed, and you ask for the last wed, you will
+    get the date 7 days ago.
     """
+    d = datetime.datetime.now()
+    # figure out how many days in the past the day is
+    days_ago = d.weekday() - weekday
+    if days_ago <= 0:
+        # the day already happened this week
+        # skip back to last week
+        days_ago += 7
+    return d - datetime.timedelta(days_ago)
 
-    mode = args.mode
-    try:
-        mode = modes_map[mode]
-    except KeyError:
-        # we aren't mapping the mode, just keep it as is
-        pass
+def lastweek(weekday):
+    """find a last date of a given day of the week, ensuring
+     that the date is not in this calendar week
 
+    If today is wed, and you ask for the last tue, you will
+    get the date 8 days ago
+    """
+    d = datetime.datetime.now()
+    # figure out how many days since sunday
+    days_since_sunday = d.weekday() + 1
+    if days_since_sunday == 7:
+        # today is sunday, and that's the beginning of my week
+        # so make days since sunday be zero
+        days_since_sunday = 0
+    two_sundays_ago = days_since_sunday + 7
+    if weekday == 6:
+        # asking for sunday, but it's the first day of the week for me
+        # we already skipped ahead in two_sundays_ago. since
+        # we are gonna subtract weekday, we would be two weeks ago,
+        # so add a week
+        two_sundays_ago += 7
+    # off by one because monday=0 and two_sundays_ago is 1 based
+    return d - datetime.timedelta(two_sundays_ago - weekday - 1)
 
-    return (args.mode, dayofweek)
-
-
-def next_weekday(weekday):
+def next(weekday):
     """find the next future date of a given day of the week
 
     If today is tues, and you ask for the next fri, you will
@@ -63,14 +117,12 @@ def next_weekday(weekday):
     # figure out how many days in the future the day is
     days_ahead = weekday - d.weekday()
     if days_ahead <= 0:
-    # the day already happened this week
-    # skip ahead to next week
-    days_ahead += 7
-    d = d + datetime.timedelta(days_ahead)
-    out = d.strftime("%A, %B %e")
-    return " ".join(out.split())
+        # the day already happened this week
+        # skip ahead to next week
+        days_ahead += 7
+    return d + datetime.timedelta(days_ahead)
 
-def nextweek_weekday(weekday):
+def nextweek(weekday):
     """find a future date of a given day of the week, ensuring
      that the date is not in this calendar week
 
@@ -78,20 +130,46 @@ def nextweek_weekday(weekday):
     get the date 8 days from now
     """
     d = datetime.datetime.now()
-    # find the date of Monday next week
-    days_til_monday = 6 - d.weekday() + 1
-    if days_til_monday == 0:
-    # we need to go to next monday
-    days_til_monday = 7
+    # find the date of Sunday next week
+    days_til_sunday = 6 - d.weekday()
+    if days_til_sunday == 0:
+        # today is sunday, and that's the beginning of my week
+        # so go to next week
+        days_til_sunday = 7
     if weekday == 6:
-    # asking for sunday, but it's the first day of the week for me
-    # so back everything up by a week
-    days_til_monday -= 7
-    d = d + datetime.timedelta(days_til_monday + weekday)
-    out = d.strftime("%A, %B %e")
-    return " ".join(out.split())
+        # asking for sunday, but it's the first day of the week for me
+        # we already skipped ahead in the previous if statement, since
+        # we are gonna add weekday, we would be two weeks ahead,
+        # so back up a week
+        days_til_sunday -= 7
+    # off by one because monday=0 and days_til_sunday is 1 based
+    return d + datetime.timedelta(days_til_sunday + weekday + 1)
 
+#
+# set up a parser for the command line arguments and parse them
+parser = argparse.ArgumentParser(
+    description="shift dates by days of the week"
+)
+parser.add_argument('mode', choices=modes, action=ModeAction, help="shift mode")
+parser.add_argument('dayofweek', action=DayAction, help="which day of the week")
+parser.add_argument('-f',
+    '--format',
+    default="%A, %B %e",
+    help="date format using python conventions"
+)
+args = parser.parse_args()
 
+#
+# call the proper function based on the selected mode
+if args.mode == 'last':
+    date = last(args.dayofweek)
+elif args.mode == 'lastweek':
+    date = lastweek(args.dayofweek)
+elif args.mode == 'next':
+    date = next(args.dayofweek)
+elif args.mode == 'nextweek':
+    date = nextweek(args.dayofweek)
 
-print('next_weekday 0 Mon: ' + next_weekday(6))
-print('nextweek_weekday 0 Mon: ' + nextweek_weekday(6))
+#
+# format the output
+print(date.strftime(args.format))
