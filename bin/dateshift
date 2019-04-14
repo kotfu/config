@@ -1,0 +1,97 @@
+#!/usr/bin/env python3
+#
+
+import argparse
+import datetime
+
+modes = [
+    'next', 'n',
+    'nextweek', 'nw',
+    'last', 'l',
+    'lastweek', 'lw',
+]
+modes_map = {
+    'n':'next',
+    'nw':'nextweek',
+    'l':'last',
+    'lw':'lastweek',
+}
+
+
+parser = argparse.ArgumentParser(
+    description="shift dates by days of the week"
+)
+parser.add_argument('mode', choices=modes, help="next, nextweek, last, lastweek")
+parser.add_argument('dayofweek', help="which day of the week")
+args = parser.parse_args()
+
+print('mode={}'.format(args.mode))
+print('dayofweek={}'.format(args.dayofweek))
+
+(mode, dayofweek) = interpret_args(args)
+
+
+# weekday 0=Mon, 1=Tue...
+
+def interpret_args(args)
+    """validate and interpret the command line arguments
+
+    mode will be one of ['next', 'nextweek', 'last', 'lastweek']
+    """
+
+    mode = args.mode
+    try:
+        mode = modes_map[mode]
+    except KeyError:
+        # we aren't mapping the mode, just keep it as is
+        pass
+
+
+    return (args.mode, dayofweek)
+
+
+def next_weekday(weekday):
+    """find the next future date of a given day of the week
+
+    If today is tues, and you ask for the next fri, you will
+    get the date three days from now.
+
+    If today is wed, and you ask for the next wed, you will
+    get the date 7 days from now.
+    """
+    d = datetime.datetime.now()
+    # figure out how many days in the future the day is
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0:
+    # the day already happened this week
+    # skip ahead to next week
+    days_ahead += 7
+    d = d + datetime.timedelta(days_ahead)
+    out = d.strftime("%A, %B %e")
+    return " ".join(out.split())
+
+def nextweek_weekday(weekday):
+    """find a future date of a given day of the week, ensuring
+     that the date is not in this calendar week
+
+    If today is tues, and you ask for the next wed, you will
+    get the date 8 days from now
+    """
+    d = datetime.datetime.now()
+    # find the date of Monday next week
+    days_til_monday = 6 - d.weekday() + 1
+    if days_til_monday == 0:
+    # we need to go to next monday
+    days_til_monday = 7
+    if weekday == 6:
+    # asking for sunday, but it's the first day of the week for me
+    # so back everything up by a week
+    days_til_monday -= 7
+    d = d + datetime.timedelta(days_til_monday + weekday)
+    out = d.strftime("%A, %B %e")
+    return " ".join(out.split())
+
+
+
+print('next_weekday 0 Mon: ' + next_weekday(6))
+print('nextweek_weekday 0 Mon: ' + nextweek_weekday(6))
