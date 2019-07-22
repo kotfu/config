@@ -154,7 +154,7 @@ parser.add_argument('mode', choices=modes, action=ModeAction, help="shift mode")
 parser.add_argument('dayofweek', action=DayAction, help="which day of the week")
 parser.add_argument('-f',
     '--format',
-    default="%A, %B %e",
+    default="%A, %B %-d",
     help="date format using python conventions"
 )
 args = parser.parse_args()
