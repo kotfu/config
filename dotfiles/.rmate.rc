@@ -1,0 +1,3 @@
+host: auto
+port: 52698
+unixsocket: ~/.rmate.socket
