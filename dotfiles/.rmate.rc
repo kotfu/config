@@ -1,3 +1,2 @@
-host: auto
+host: localhost
 port: 52698
-unixsocket: ~/.rmate.socket
