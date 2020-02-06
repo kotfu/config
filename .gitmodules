@@ -7,6 +7,4 @@
 [submodule "submodules/bashmarks"]
 	path = submodules/bashmarks
 	url = https://github.com/huyng/bashmarks.git
-[submodule "submodules/rmate"]
-	path = submodules/rmate
-	url = https://github.com/textmate/rmate.git
+
