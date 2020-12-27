@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2020 Jared Crapo
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+"""
+Extract creation date and time from a movie or image file
+
+Requires:
+    - exiv2 in the path
+    - ffmpeg in the path
+    - python-dateutil module
+    - python >= 3.5
+
+"""
+import argparse
+import dateutil.parser
+import logging
+import os
+import re
+import subprocess
+import sys
+
+VERSION_STRING = "0.1"
+
+
+def _build_parser():
+    """Build the argument parser"""
+    parser = argparse.ArgumentParser(
+        description="my command line program"
+    )
+
+    filename_help = "path to a movie file"
+    parser.add_argument("filename", nargs=1, help=filename_help)
+
+    debug_help = "show additional debugging information while processing"
+    parser.add_argument("-d", "--debug", action="store_true", help=debug_help)
+
+    version_help = "show the version information and exit"
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=VERSION_STRING,
+        help=version_help,
+    )
+
+    return parser
+
+def get_video_metadata_date(filename):
+    """Dump metadata from a video file using ffmpeg
+
+    :return:    a python date object
+    :raises ValueError:    if a creation date can't be found in the metadata
+    :raises Exception:     if ffmpeg exits with a non-zero exit code
+    """
+    CMDLINE='ffmpeg -hide_banner -i "{}" -fs 0 -f null /dev/null'.format(filename)
+    CREATION_TIME_PATTERN = re.compile(r"^ *creation_time *\: *(.*)", re.MULTILINE)
+    process = subprocess.run(CMDLINE, shell=True, capture_output=True)
+    process.check_returncode()
+
+    # ffmpeg puts the data we want into stderr as a string of bytes
+    output = process.stderr.decode('utf-8')
+    match = re.search(CREATION_TIME_PATTERN, output)
+    if match:
+        datestr = match.group(1)
+        logging.debug("found creation_time=%s", datestr)
+        created = dateutil.parser.parse(datestr)
+        logging.debug("parsed date to: %s", created.strftime("%A %B %-d, %Y"))
+        return created
+    else:
+        raise ValueError
+
+
+#
+# entry point for command line
+def main(argv=None):
+    """Entry point for command line program."""
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+
+    if args.debug:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+    else:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.ERROR)
+    logging.debug("argv=%s", str(argv))
+    logging.debug("args=%s", str(args))
+
+    exitcode = 0
+    filename = args.filename[0]
+    if os.path.isfile(filename):
+        created = get_video_metadata_date(filename)
+        print("date is {}".format(get_video_metadata_date(filename)))
+    else:
+        print("{}: {}: no such file".format(parser.prog, filename))
+        exitcode = 1
+
+    return exitcode
+
+
+if __name__ == "__main__":
+    sys.exit(main())
