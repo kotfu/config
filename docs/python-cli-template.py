@@ -28,7 +28,7 @@ import argparse
 import logging
 import sys
 
-VERSION_STRING = "0.1"
+VERSION_STRING = "1.0"
 
 
 def _build_parser():
@@ -37,7 +37,7 @@ def _build_parser():
         description="TODO: My command line program"
     )
 
-    filename_help = "path to a movie file"
+    filename_help = "path to a file"
     parser.add_argument("filename", nargs=1, help=filename_help)
 
     debug_help = "show additional debugging information while processing commands"
@@ -48,11 +48,27 @@ def _build_parser():
         "-v",
         "--version",
         action="version",
-        version=VERSION_STRING,
+        version="{} {}".format(parser.prog, VERSION_STRING),
         help=version_help,
     )
 
     return parser
+
+class BraceLogRecord(logging.LogRecord):
+    """A subclass log record that formats using new style braces"""
+
+    def getMessage(self):
+        """
+        Return the message for this LogRecord.
+
+        Return the message for this LogRecord after merging any user-supplied
+        arguments with the message.
+        """
+        msg = str(self.msg)
+        if self.args:
+            # self.args is a tuple, so we need to unpack it for format()
+            msg = msg.format(*self.args)
+        return msg
 
 #
 # entry point for command line
@@ -61,11 +77,12 @@ def main(argv=None):
     parser = _build_parser()
     args = parser.parse_args(argv)
     if args.debug:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+        logging.basicConfig(format="--{message}", style='{', level=logging.DEBUG)
     else:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.ERROR)
-    logging.debug("argv=%s", str(argv))
-    logging.debug("args=%s", str(args))
+        logging.basicConfig(format="--{message}", style='{', level=logging.ERROR)
+    logging.setLogRecordFactory(BraceLogRecord)
+    logging.debug("argv={}", argv)
+    logging.debug("args={}", str(args))
 
     print("{}: {}".format(parser.prog, args.filename[0])
     return 0
