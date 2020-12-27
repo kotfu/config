@@ -30,6 +30,10 @@ Requires:
     - python-dateutil module
     - python >= 3.5
 
+Exit codes:
+    0 = command completed successfully
+    1 = file not found
+    2 = no metadata found in file
 """
 import argparse
 import dateutil.parser
@@ -39,14 +43,12 @@ import re
 import subprocess
 import sys
 
-VERSION_STRING = "0.1"
+VERSION_STRING = "0.2"
 
 
 def _build_parser():
     """Build the argument parser"""
-    parser = argparse.ArgumentParser(
-        description="my command line program"
-    )
+    parser = argparse.ArgumentParser(description="my command line program")
 
     filename_help = "path to a movie file"
     parser.add_argument("filename", nargs=1, help=filename_help)
@@ -59,35 +61,77 @@ def _build_parser():
         "-v",
         "--version",
         action="version",
-        version=VERSION_STRING,
+        version="{} {}".format(parser.prog, VERSION_STRING),
         help=version_help,
     )
 
     return parser
 
-def get_video_metadata_date(filename):
-    """Dump metadata from a video file using ffmpeg
 
-    :return:    a python date object
-    :raises ValueError:    if a creation date can't be found in the metadata
-    :raises Exception:     if ffmpeg exits with a non-zero exit code
-    """
-    CMDLINE='ffmpeg -hide_banner -i "{}" -fs 0 -f null /dev/null'.format(filename)
-    CREATION_TIME_PATTERN = re.compile(r"^ *creation_time *\: *(.*)", re.MULTILINE)
-    process = subprocess.run(CMDLINE, shell=True, capture_output=True)
-    process.check_returncode()
-
-    # ffmpeg puts the data we want into stderr as a string of bytes
-    output = process.stderr.decode('utf-8')
-    match = re.search(CREATION_TIME_PATTERN, output)
+def colons_to_dashes(value):
+    match = re.search(r"(\d\d\d\d):(\d\d):(\d\d) (.*)", value)
     if match:
-        datestr = match.group(1)
-        logging.debug("found creation_time=%s", datestr)
-        created = dateutil.parser.parse(datestr)
-        logging.debug("parsed date to: %s", created.strftime("%A %B %-d, %Y"))
-        return created
+        return "{}-{}-{} {}".format(
+            match.group(1), match.group(2), match.group(3), match.group(4)
+        )
     else:
-        raise ValueError
+        return value
+
+
+# SIFTERS is an array of tuples
+# the first element in the tuple has the command to execute
+# the second element in the tuple has a regular expression which should return a date string looking thing
+# the third element in the tuple has a function to call to transform the output before sending it
+#    to dateutil to parse it
+SIFTERS = [
+    (
+        'exiv2 "{}"',
+        re.compile(r"^.*timestamp *\: *(.*)", re.MULTILINE),
+        colons_to_dashes,
+    ),
+    (
+        'ffmpeg -hide_banner -i "{}" -fs 0 -f null /dev/null',
+        re.compile(r"^ *creation_time *\: *(.*)", re.MULTILINE),
+        None,
+    ),
+]
+
+
+def get_metadata_date(filename):
+    """Extract created date from an image or video file metadata
+
+    :return:    a python date object, or None if no created metadata found
+    """
+
+    for cmdline, regexp, func in SIFTERS:
+        logging.debug("running sifter....")
+        cmdline = cmdline.format(filename)
+        logging.debug("executing '%s'", cmdline)
+        process = subprocess.run(
+            cmdline, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
+        )
+        if process.returncode == 0:
+            output = process.stdout.decode("utf-8")
+            logging.debug("searching output for %s", str(regexp))
+            match = re.search(regexp, output)
+            if match:
+                datestr = match.group(1)
+                logging.debug("found creation date=%s", datestr)
+                if func:
+                    logging.debug("calling %s to pre-process", str(func))
+                    datestr = func(datestr)
+                    logging.debug("date preprocessed to %s", datestr)
+                created = dateutil.parser.parse(datestr)
+                logging.debug("date parsed to: %s", created.strftime("%A, %B %-d, %Y"))
+                return created
+            else:
+                logging.debug("no match found in output")
+        else:
+            logging.debug("error processing file, continuing")
+
+    # we didn't match anything
+    logging.debug("sifters finished processing with no metadata found")
+    return None
 
 
 #
@@ -101,14 +145,20 @@ def main(argv=None):
         logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
     else:
         logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.ERROR)
-    logging.debug("argv=%s", str(argv))
+    logging.debug("argv=%s", argv)
     logging.debug("args=%s", str(args))
 
     exitcode = 0
     filename = args.filename[0]
     if os.path.isfile(filename):
-        created = get_video_metadata_date(filename)
-        print("date is {}".format(get_video_metadata_date(filename)))
+        created = get_metadata_date(filename)
+        if created:
+            pass
+        else:
+            print(
+                "{}: {}: no creation date metadata found".format(parser.prog, filename)
+            )
+            exitcode = 2
     else:
         print("{}: {}: no such file".format(parser.prog, filename))
         exitcode = 1
@@ -117,4 +167,4 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
