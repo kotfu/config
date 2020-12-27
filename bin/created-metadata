@@ -44,10 +44,11 @@ import re
 import subprocess
 import sys
 
-VERSION_STRING = "0.3"
+VERSION_STRING = "1.4"
 
-DEFAULT_FORMAT="%x %X"
-TOUCH_FORMAT="%Y%m%d%H%M"
+DEFAULT_FORMAT = "%x %X"
+TOUCH_FORMAT = "%Y%m%d%H%M"
+
 
 def _build_parser():
     """Build the argument parser"""
@@ -75,6 +76,32 @@ def _build_parser():
     )
 
     return parser
+
+
+class BraceLogRecord(logging.LogRecord):
+    """A subclass log record that formats using new style braces"""
+
+    def getMessage(self):
+        """
+        Return the message for this LogRecord.
+
+        Return the message for this LogRecord after merging any user-supplied
+        arguments with the message.
+        """
+        msg = str(self.msg)
+        if self.args:
+            # self.args is a tuple, so we need to unpack it for format()
+            msg = msg.format(*self.args)
+        return msg
+
+
+def configure_debug(debugflag):
+    """configure our customized logging setup"""
+    if debugflag:
+        logging.basicConfig(format="--{message}", style="{", level=logging.DEBUG)
+    else:
+        logging.basicConfig(format="--{message}", style="{", level=logging.ERROR)
+    logging.setLogRecordFactory(BraceLogRecord)
 
 
 def colons_to_dashes(value):
@@ -115,23 +142,23 @@ def get_metadata_date(filename):
     for cmdline, regexp, func in SIFTERS:
         logging.debug("running sifter....")
         cmdline = cmdline.format(filename)
-        logging.debug("executing '%s'", cmdline)
+        logging.debug("executing '{}'", cmdline)
         process = subprocess.run(
             cmdline, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True
         )
         if process.returncode == 0:
             output = process.stdout.decode("utf-8")
-            logging.debug("searching output for %s", str(regexp))
+            logging.debug("searching output for {}", str(regexp))
             match = re.search(regexp, output)
             if match:
                 datestr = match.group(1)
-                logging.debug("found creation date=%s", datestr)
+                logging.debug("found creation date={}", datestr)
                 if func:
-                    logging.debug("calling %s to pre-process", str(func))
+                    logging.debug("calling {} to pre-process", str(func))
                     datestr = func(datestr)
-                    logging.debug("date preprocessed to %s", datestr)
+                    logging.debug("date preprocessed to {}", datestr)
                 created = dateutil.parser.parse(datestr)
-                logging.debug("date parsed to: %s", created.strftime("%A, %B %-d, %Y"))
+                logging.debug("date parsed to: {}", created.strftime("%A, %B %-d, %Y"))
                 return created
             else:
                 logging.debug("no match found in output")
@@ -150,12 +177,12 @@ def main(argv=None):
     parser = _build_parser()
     args = parser.parse_args(argv)
 
-    if args.debug:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
-    else:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.ERROR)
-    logging.debug("argv=%s", argv)
-    logging.debug("args=%s", str(args))
+    configure_debug(args.debug)
+    logging.debug("some message here")
+    # logging.debug("argv=%s", argv)
+    # logging.debug("args=%s", str(args))
+    logging.debug("argv={}", argv)
+    logging.debug("args={}", str(args))
 
     exitcode = 0
     filename = args.filename[0]
@@ -164,7 +191,9 @@ def main(argv=None):
         if created:
             print("{}".format(created.strftime(args.format)))
             if args.touch:
-                touch_cmd = 'touch -t {} "{}"'.format(created.strftime(TOUCH_FORMAT), filename)
+                touch_cmd = 'touch -t {} "{}"'.format(
+                    created.strftime(TOUCH_FORMAT), filename
+                )
                 logging.debug(touch_cmd)
                 process = subprocess.run(touch_cmd, shell=True)
                 if process.returncode == 0:
@@ -173,12 +202,14 @@ def main(argv=None):
                     logging.debug("error updating modification date")
                     exitcode = 3
         else:
-            print(
-                "{}: {}: no creation date metadata found".format(parser.prog, filename)
+            errmsg = "{}: {}: no creation date metadata found".format(
+                parser.prog, filename
             )
+            print(errmsg, file=sys.stderr)
             exitcode = 2
     else:
-        print("{}: {}: no such file".format(parser.prog, filename))
+        errmsg = "{}: {}: no such file".format(parser.prog, filename)
+        print(errmsg, file=sys.stderr)
         exitcode = 1
 
     return exitcode
