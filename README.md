@@ -1,5 +1,7 @@
 # config
-My collection of home directory config files, including various bash tools
+
+My collection of home directory config and script files, including various bash tools
+
 
 ## How to install
 
@@ -16,9 +18,11 @@ My collection of home directory config files, including various bash tools
   You want to add it to both initialization files so that this stuff
   will all get run whether you launch bash as a login shell or not.
 
+
 ## Updating
 
 - type `~/config/update` to update the git repo and download updates to third party tools
+
 
 ## Prerequisites
 
@@ -26,6 +30,7 @@ You'll need bash, and also the following command line tools:
 
 - git
 - curl
+
 
 ## Customizing
 
@@ -35,6 +40,12 @@ variable to the directory where you put the repo.
 If you have anything that it unique to the current machine that you want to
 have run when you log in, put it in `~/.localprofile`. This file gets sourced
 very last, and is intended to be host specific, and not in the config repo.
+
+
+## Other packages to install
+
+- [bat](https://github.com/sharkdp/bat) - a better cat
+
 
 ## Todo
 
