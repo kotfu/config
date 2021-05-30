@@ -60,7 +60,8 @@ very last, and is intended to be host specific, and not in the config repo.
 
 ## Todo
 
-- figure out how to do platform specific stuff, ie only do this on macos, like bashrc.d/copy.bash
+- figure out how to do platform specific stuff, ie only do this on macos, like bashrc.d/copy.bash, use uname -s
+- openbsd colorizes man already, so it doesn't need it
 - check out https://github.com/shyiko/dotfiles
 - get https://github.com/rupa/z?
 - https://github.com/clvv/fasd
