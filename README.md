@@ -3,6 +3,13 @@
 My collection of home directory config and script files, including various bash tools
 
 
+## Clearing up common misunderstandings
+
+`~/.profile` should set the path, and things like `~/.bashrc` should not. We have two
+initilization chains, one intended to be run from `~/.profile`, and the other from
+`~/.bashrc`.
+
+
 ## How to install
 
 - Clone this repository to `~/config`
@@ -11,13 +18,17 @@ My collection of home directory config and script files, including various bash 
     ```
 
 - Type `~/config/update`
-- add the following line to `~/.bashrc` and `~/.profile`:
+- add the following line to `~/.profile`:
+    ```
+    source ~/config/profile
+    if [ -f ~/.bashrc ]; then
+	    . ~/.bashrc
+    fi
+    ```
+- add the following line to `~/.bashrc`:
     ```
     source ~/config/bashrc
     ```
-  You want to add it to both initialization files so that this stuff
-  will all get run whether you launch bash as a login shell or not.
-
 
 ## Updating
 
@@ -49,9 +60,9 @@ very last, and is intended to be host specific, and not in the config repo.
 
 ## Todo
 
+- figure out how to do platform specific stuff, ie only do this on macos, like bashrc.d/copy.bash
 - check out https://github.com/shyiko/dotfiles
 - get https://github.com/rupa/z?
 - https://github.com/clvv/fasd
 - https://github.com/junegunn/fzf - from brew?
-- bbedit support in EDITORS
 - local copy of lesspipe? https://github.com/wofr06/lesspipe

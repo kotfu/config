@@ -1,5 +1,5 @@
 #
-# if virtualenvwrapper is installed, activate it
+# if pyenv is installed, activate it and pyenv-virtualenv
 
 PYENV=$(which pyenv 2>/dev/null)
 if [ $? == 0 ]; then
