@@ -19,7 +19,6 @@ clipboard() {
 
 	local output
 	local res=false
-	local tmpfile="${TMPDIR}/clipboard.$RANDOM.txt"
 	local msg=""
 
 	if [[ $# == 0 ]]; then
