@@ -26,7 +26,7 @@ git submodule update --recursive
 
 echo
 echo Configuration bashmarks:
-rm -f bash.d/bashmarks.bash
+rm -f bashrc.d/bashmarks.bash
 ln -s ../submodules/bashmarks/bashmarks.sh bash.d/bashmarks.bash
 
 echo
@@ -38,7 +38,7 @@ ln -s ../submodules/bd/bash_completion.d/bd bash_completion.d/bd
 
 echo
 echo Configuring commacd:
-rm -f bash.d/commacd.bash
+rm -f bashrc.d/commacd.bash
 ln -s ../submodules/commacd/commacd.bash bash.d/commacd.bash
 
 echo
@@ -58,13 +58,13 @@ if [[ $OSTYPE =~ darwin* ]]; then
     if [ -z ${GOTIT+x} ]; then
         brew install bash-completion@2
     fi
-    
+
     # install lesspipe
     GOTIT=$( brew list --formula | grep lesspipe )
     if [ -z ${GOTIT+x} ]; then
         brew install lesspipe
     fi
-    
+
 fi
 
 echo
