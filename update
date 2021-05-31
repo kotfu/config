@@ -27,7 +27,7 @@ git submodule update --recursive
 echo
 echo Configuration bashmarks:
 rm -f bashrc.d/bashmarks.bash
-ln -s ../submodules/bashmarks/bashmarks.sh bash.d/bashmarks.bash
+ln -s ../submodules/bashmarks/bashmarks.sh bashrc.d/bashmarks.bash
 
 echo
 echo Configuring bd:
@@ -39,7 +39,7 @@ ln -s ../submodules/bd/bash_completion.d/bd bash_completion.d/bd
 echo
 echo Configuring commacd:
 rm -f bashrc.d/commacd.bash
-ln -s ../submodules/commacd/commacd.bash bash.d/commacd.bash
+ln -s ../submodules/commacd/commacd.bash bashrc.d/commacd.bash
 
 echo
 echo Retrieving iterm2 shell integration:
