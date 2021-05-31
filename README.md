@@ -49,8 +49,8 @@ If you put the git repo somewhere besides `~/config`, set the `CONFIG_DIR`
 variable to the directory where you put the repo.
 
 If you have anything that it unique to the current machine that you want to
-have run when you log in, put it in `~/.localprofile`. This file gets sourced
-very last, and is intended to be host specific, and not in the config repo.
+have run when you log in, put it in `~/.profile` or `~/.bashrc` before or after
+you source the appropriate files in `~/config/`
 
 
 ## Other packages to install
@@ -60,8 +60,6 @@ very last, and is intended to be host specific, and not in the config repo.
 
 ## Todo
 
-- figure out how to do platform specific stuff, ie only do this on macos, like bashrc.d/copy.bash, use uname -s
-- openbsd colorizes man already, so it doesn't need it
 - check out https://github.com/shyiko/dotfiles
 - get https://github.com/rupa/z?
 - https://github.com/clvv/fasd

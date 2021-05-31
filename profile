@@ -1,8 +1,7 @@
 #
-# source this from ~/.profile, it sets the path for things, which should
-# be done from ~/.profile not from ~/.bashrc
+# modular .profile
 # 
-# ~/.profile should contain something like
+# add the following to ~/.profile
 #
 # source config/profile
 #

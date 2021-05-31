@@ -1,5 +1,9 @@
 #
-# standard bashrc
+# modular .bashrc
+#
+# add the following to ~/.bashrc
+#
+# source config/bashrc
 #
 
 # a function to check if files exist in BASHRC_DIR and source them
