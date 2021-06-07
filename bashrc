@@ -6,6 +6,19 @@
 # source config/bashrc
 #
 
+if [ -z ${CONFIG_DIR+x} ]; then
+    CONFIG_DIR=~/config
+fi
+if [ ! -d $CONFIG_DIR ]; then
+    echo "Please set CONFIG_DIR in ~/.profile to point to the directory of the config repo"
+    return
+fi
+export CONFIG_DIR
+
+# configure logging
+source $CONFIG_DIR/profile.d/logging.bash
+
+
 # a function to check if files exist in BASHRC_DIR and source them
 function _bd_source {
     local BASHRC_DIR=$CONFIG_DIR/bashrc.d
