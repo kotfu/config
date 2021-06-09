@@ -38,7 +38,7 @@ ln -s ../submodules/bd/bash_completion.d/bd bash_completion.d/bd
 
 echo
 echo Configuring commacd:
-rm -f bashrc.d/commacd.sh
+rm -f bashrc.d/commacd.bash
 ln -s ../submodules/commacd/commacd.sh bashrc.d/commacd.sh
 
 echo
