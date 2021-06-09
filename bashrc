@@ -37,7 +37,7 @@ _bd_source less.bash
 _bd_source man_colorizer.bash
 _bd_source clipboard.bash
 _bd_source editor.bash
-_bd_source commacd.bash
+_bd_source commacd.sh
 _bd_source bashmarks.bash
 _bd_source bd.bash
 _bd_source iterm2_shell_integration.bash

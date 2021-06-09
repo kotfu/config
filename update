@@ -38,8 +38,8 @@ ln -s ../submodules/bd/bash_completion.d/bd bash_completion.d/bd
 
 echo
 echo Configuring commacd:
-rm -f bashrc.d/commacd.bash
-ln -s ../submodules/commacd/commacd.bash bashrc.d/commacd.bash
+rm -f bashrc.d/commacd.sh
+ln -s ../submodules/commacd/commacd.sh bashrc.d/commacd.sh
 
 echo
 echo Retrieving iterm2 shell integration:
