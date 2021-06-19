@@ -1,6 +1,6 @@
 #
 # modular .profile
-# 
+#
 # add the following to ~/.profile
 #
 # source config/profile
@@ -45,3 +45,4 @@ function _pd_source {
 _pd_source homebin.bash
 _pd_source pyenv.bash
 _pd_source rvm.bash
+_pd_source visualstudiocode.bash
