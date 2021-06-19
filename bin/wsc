@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 #
+# Given a directory, launch source code control (Tower), an editor (Visual Studio Code)
+# and a terminal (iTerm2) in that directory so you are all ready to edit the code there
+#
 
+import argparse
 import os
 import sys
 import time
+
 import iterm2
 
-dir = sys.argv[1]
-if not dir:
-    sys.exit(1)
+# constants
+VERSION_STRING = "1.0.0"
+EXIT_SUCCESS = 0
+EXIT_ERROR = 1
+EXIT_USAGE = 2
+
+directory = None
 
 
-# launch tower
-# open -a Tower dir
-
-# launch vsc
-# open -a "Visual Studio Code" dir
-
-# launch doesn't do anything if the app is already running
-# if it's not running, it starts it but doesn't open any windows
-os.system("""osascript -e 'launch application "iTerm"'""")
-
-async def main(connection):
+async def _launch_iterm(connection):
+    """async function to talk to iTerm2"""
     app = await iterm2.async_get_app(connection)
 
     # Foreground the app
@@ -33,12 +33,60 @@ async def main(connection):
     session = window.current_tab.current_session
     # give time for the shell to login before we send commands
     time.sleep(1)
-    await session.async_send_text('cd "{}"\n'.format(dir))
-
-# Passing True for the second parameter means keep trying to
-# connect until the app launches.
-iterm2.run_until_complete(main, True)
-
-# Moom the windows
+    await session.async_send_text('cd "{}"\n'.format(directory))
 
 
+def _build_parser():
+    """build an arg parser with all the proper parameters"""
+    parser = argparse.ArgumentParser(
+        description="Launch apps to write some code in a given directory"
+    )
+    dir_help = "directory to open for writing code"
+    parser.add_argument("directory", help=dir_help)
+
+    version_help = "show the version information and exit"
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=VERSION_STRING,
+        help=version_help,
+    )
+    return parser
+
+
+def main(argv=None):
+    """main function"""
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+
+    global directory
+    directory = args.directory
+    ## make sure dir exists
+    if not os.path.isdir(directory):
+        print(
+            "{}: '{}' is not a directory".format(parser.prog, directory),
+            file=sys.stderr,
+        )
+        sys.exit(EXIT_USAGE)
+
+    # open Tower and Visual Studio Code
+    os.system("open -a Tower '{}'".format(directory))
+    os.system("code --new-window '{}'".format(directory))
+
+    # launch doesn't do anything if the app is already running
+    # if it's not running, it starts it but doesn't open any windows
+    # we need iTerm2 running so we can talk to it via the python API
+    os.system("""osascript -e 'launch application "iTerm"'""")
+
+    # Passing True for the second parameter means keep trying to
+    # connect until the app launches.
+    iterm2.run_until_complete(_launch_iterm, True)
+
+    # Moom the windows
+
+    return EXIT_SUCCESS
+
+
+if __name__ == "__main__":  # pragma: nocover
+    sys.exit(main())
