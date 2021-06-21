@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #
 # output the shortest possible reference to the path
-#
-# TODO handle paths with spaces, i.e. output quotes if we need them
 
 if [ -z "$1" ]; then
    echo
