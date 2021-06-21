@@ -3,7 +3,7 @@
 # https://brettterpstra.com/projects/logr/
 
 # # First source the script
-# source ~/scripts/logr.bash
+# source ~/lib/logr.bash
 
 # # Start the logger, generates log name from scripts filename
 # logr start

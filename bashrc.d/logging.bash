@@ -4,5 +4,5 @@
 
 type logr >/dev/null 2>&1
 if [[ $? == 1 ]]; then
-    source $CONFIG_DIR/scripts/logr.bash
+    source $CONFIG_DIR/lib/logr.bash
 fi
