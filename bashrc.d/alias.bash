@@ -7,3 +7,5 @@ alias df='df -h'
 alias du='du -h'
 alias ssh='ssh -A'
 alias bc='bc -lq'
+
+alias y='open -a Yoink'
