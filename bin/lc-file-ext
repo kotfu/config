@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+# given any number of file arguments, rename them so the file extension is lowercase
+#
+# designed to be used by rules in Hazel because it doesn't do case sensitive filename matching
+#
+# how files are renamed:
+#
+# - fred.TAR.GZ -> fred.TAR.gz
+# - my-filename -> my-filename
+# - ~/Library/Application Support/some-file.TAR -> ~/Library/Application Support/some-file.tar
+#
+# Usage:
+#
+#     $ lc-file-ext fred.TAR.GZ
+#
+# which will rename fred.TAR.GZ to fred.TAR.gz
+#
+# test whether a file would be renamed by:
+#
+#     $ lc-file-ext -t my.file.TAR.GZ
+#
+# 0 exit code indicates there is an uppercase file extension
+# 1 exit code indicates there is not an uppercase file extension
+
+
+if [ "$1" == "-t" ]
+then
+# test a single filename
+    FULLNAME=$2
+    EXT=$([[ "$FULLNAME" = *.* ]] && echo "${FULLNAME##*.}" || echo '')
+    if [[ "$EXT" =~ [A-Z]+ ]]
+    then
+        echo yup
+        exit 0
+    else
+        echo nope
+        exit 1
+    fi
+else
+    # rename files that match
+    for FULLNAME in "$@"
+    do
+        #EXT="${FULLNAME##*.}"
+        EXT=$([[ "$FULLNAME" = *.* ]] && echo "${FULLNAME##*.}" || echo '')
+        if [ "$EXT" ]
+        then
+            BASE="${FULLNAME%.*}"
+            LOWEREXT="${EXT,,}"
+            NEWNAME="$BASE.$LOWEREXT"
+            if [ "$FULLNAME" != "$NEWNAME" ]
+            then
+                mv "$FULLNAME" "$NEWNAME"
+            fi
+        fi
+    done
+fi
