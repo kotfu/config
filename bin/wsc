@@ -3,6 +3,7 @@
 # Given a directory, launch source code control (Tower), an editor (Visual Studio Code)
 # and a terminal (iTerm2) in that directory so you are all ready to edit the code there
 #
+# wsc = write some code
 
 import argparse
 import os
