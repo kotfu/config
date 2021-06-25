@@ -24,6 +24,9 @@ import argparse
 import re
 import sys
 
+# to be removed later
+import pytest
+
 # constants
 VERSION_STRING = "1.0.0"
 EXIT_SUCCESS = 0
@@ -54,13 +57,15 @@ def _build_parser():
     )
 
     parser.add_argument(
-        "-k" "--key-symbols",
+        "-k",
+        "--key-symbols",
         action="store_true",
         help="output key symbols instead of key names",
     )
 
     parser.add_argument(
-        "-p" "--plus-sign",
+        "-p",
+        "--plus-sign",
         action="store_true",
         help="output + between modifier symbols",
     )
@@ -78,7 +83,8 @@ def _build_parser():
 class Key:
     """store the name of a key, the html rendering of it, and a friendly text render of it"""
 
-    def __init__(self, name, html):
+    def __init__(self, key, name, html):
+        self.key = key
         self.name = name
         self.html = html
 
@@ -101,10 +107,11 @@ class KeyboardShortcut:
     # * isn't really a unicode version of the modifier, but it's included
     # here because we map between unicode and plaintext mods
     # these are in the order apple recommends they be presented
-    _unicode_mods = ["*", "⌃", "⇧", "⌥", "⌘"]
-    _plaintext_mods = ["*", "^", "$", "~", "@"]
+    _mods_plaintext = ["*", "^", "~", "$", "@"]
+    _mods_unicode = ["*", "⌃", "⌥", "⇧", "⌘"]
+    _mods_names = ["Fn", "Control", "Option", "Shift", "Command"]
     _unicode_plaintext_mods_trans = str.maketrans(
-        "".join(_unicode_mods), "".join(_plaintext_mods)
+        "".join(_mods_unicode), "".join(_mods_plaintext)
     )
 
     # on parsing user input, allow specification of certain keynames
@@ -156,24 +163,39 @@ class KeyboardShortcut:
 
     # - if found in this dictionary, the "key" has an associated html entity,
     #   friendly name, and/or text description
-    _keys = {}
+    _keys = {
+        "⎋": Key("⎋", "Escape", "html escape"),
+    }
 
     # shifted key translations
-    _unshifted = r"abcdefghijklmnopqrstuvwxyz,./;'[]\1234567890-="
-    _shifted = r'ABCDEFGHIJKLMNOPQRSTUVWXYZ<>?:"{}|!@#$%^&*()_+'
-    _shifted_trans = str.maketrans(_unshifted, _shifted)
+    _unshifted_keys = r",./;'[]\1234567890-="
+    _shifted_keys = r'<>?:"{}|!@#$%^&*()_+'
+    _to_shifted_trans = str.maketrans(_unshifted_keys, _shifted_keys)
+    _to_unshifted_trans = str.maketrans(_shifted_keys, _unshifted_keys)
 
+    # modifier -> name map
+    _mod_name_map = {
+        '*': '',
+    }
     def __init__(self, text):
-        self._canonical = self._parse(text)
+        # mods is a string, key is also a string
+        # if key is alphabetic, it's stored in upper
+        # case
+        self.mods, self.key = self._parse(text)
+        self.canonical = "".join(self.mods) + self.key
 
     def __repr__(self):
-        return "KeyboardShortcut({})".format(self._canonical)
+        return "KeyboardShortcut({})".format(self.canonical)
 
     def __str__(self):
-        return self._canonical
+        return self.canonical
 
     @classmethod
     def _parse(cls, text):
+        """parse input into a canonical non-unicode representation of the shortcut
+
+        letters are always stored as lower case
+        """
         # Only remove hyphens preceeded and followed by non-space character
         # to avoid removing the last hyphen from 'option-shift--' or 'command -'
         text = re.sub(r"(?<=\S)-(?=\S)", " ", text)
@@ -188,50 +210,132 @@ class KeyboardShortcut:
         for char in text.strip():
             if char == " ":
                 continue
-            elif char in cls._unicode_mods:
+            elif char in cls._mods_unicode:
                 # translate unicode modifier symbols to their plaintext equivilents
                 mods.append(char.translate(cls._unicode_plaintext_mods_trans))
-            elif char in "*^$@~":
+            elif char in cls._mods_plaintext:
                 mods.append(char)
             else:
                 key += char
-        # remove duplicate modifiers
-        mods = list(set(mods))
-        # sort the mods to be in Apple's recommended order
-        mods.sort(key=lambda x: cls._plaintext_mods.index(x))
 
         if len(key) == 1:
-            if not mods and key in cls._shifted:
-                # turn H into $H and { into ${
-                mods.append("$")
-            if "$" in mods:
-                # shift is in the mods, turn lowercase letters and unshifted symbols
-                # into their shifted equivilents
-                key = key.translate(cls._shifted_trans)
+            if key in cls._shifted_keys:
+                # command % should be command shift 5
+                # but command ? should be command ?
+                if key in '!@#$%^&*()':
+                    mods.append('$') # duplicates will get removed later
+                    key = key.translate(cls._to_unshifted_trans)
+                else:
+                    mods = [mod for mod in mods if mod != "$"]
+            else:
+                if "$" in mods:
+                    # shift is in the mods, and the key is unshifted
+                    # we should have the shifted symbol unless it is
+                    # a number or letter
+                    # command shift 5 should remain command shift 5
+                    # and command shift r should remain command shift r
+                    if re.match("[^0-9a-zA-Z]", key):
+                        # but command shift / should be command ?
+                        # and shift control \ should be control |
+                        key = key.translate(cls._to_shifted_trans)
+                        mods = [mod for mod in mods if mod != "$"]
+                else:
+                    # the key is unshifted and we don't have shift
+                    # in the mods either
+                    # into their shifted equivilents and remove
+                    # shift from the shortcut
+                    # ie turn 'command shift /' into 'command ?'
+                    pass
+                    # if key in cls._unshifted_keys:
+                    #     key = key.translate(cls._to_shifted_trans)
+                    #     mods = [mod for mod in mods if mod != "$"]
+                # shortcuts always displayed with upper case letters
+            key = key.upper()
         else:
             if key.lower() in cls._keyname_map:
                 key = cls._keyname_map[key.lower()]
             else:
                 raise ValueError("{} is not a valid key".format(key))
-        return "".join(mods) + key
 
+        # remove duplicate modifiers
+        mods = list(set(mods))
+        # sort the mods to be in Apple's recommended order
+        mods.sort(key=lambda x: cls._mods_plaintext.index(x))
+
+        return ("".join(mods), key)
+
+    @property
+    def mod_names(self):
+        """return a list of modifier names for this shortcut"""
+        output = []
+        for mod in self.mods:
+            output.append(self._mods_names[self._mods_plaintext.index(mod)])
+        return output
+
+    @property
+    def mod_symbols(self):
+        """return a list of unicode symbols for this shortcut"""
+        output = []
+        for mod in self.mods:
+            output.append(self._mods_unicode[self._mods_plaintext.index(mod)])
+        return output
+
+    @property
+    def key_name(self):
+        """return either the key, or if it has a name return that"""
+        if self.key in self._keys:
+            return self._keys[self.key].name
+        # this is for human consumption, and keys are always upper case
+        return self.key.upper()
 
 def _parse_shortcuts(text):
     """parse a string or array of text into a standard representation of the shortcut
 
     returns an array of shortcut combinations
+
+    this is a short function only called in one place, but it makes it much easier
+    to test
     """
     combos = []
-    for combo in re.split(r' / ', text):
+    for combo in re.split(r" / ", text):
         combos.append(KeyboardShortcut(combo))
     return combos
+
+
+def _render_txt(combos, args):
+    """render as plain text a list of keyboard combinations according to the
+    options in args"""
+    output = []
+    for combo in combos:
+        tokens = []
+        joiner = ""
+        if args.modifier_symbols:
+            if args.plus_sign:
+                joiner = "+"
+            tokens.extend(combo.mod_symbols)
+        else:
+            joiner = "-"
+            tokens.extend(combo.mod_names)
+        if args.key_symbols:
+            tokens.extend(combo.key.upper())
+        else:
+            tokens.append(combo.key_name)
+        output.append(joiner.join(tokens))
+
+    return " / ".join(output)
 
 
 def main(argv=None):
     """main function"""
     parser = _build_parser()
     args = parser.parse_args(argv)
-    combos = _parse_shortcuts(' '.join(args.shortcuts))
+    print(args)
+    combos = _parse_shortcuts(" ".join(args.shortcuts))
+
+    if args.output == "txt":
+        print(_render_txt(combos, args))
+    elif args.output == "html":
+        pass
 
 
 if __name__ == "__main__":
@@ -251,38 +355,77 @@ if __name__ == "__main__":
 # delete that function
 
 
-def setup_module():
-    global pytest
-    global mock
-    import pytest
-    import mock
+#def setup_module():
+#    global pytest
+#    global mock
+#    import pytest
+#    import mock
 
-
-def test_ks_parse():
-    parsemap = [
-        ("command f", "@f"),
-        ("command option r", "~@r"),
-        ("⌘⌥⇧⌃r", "^$~@R"),
+@pytest.mark.parametrize("inp, out", [
+        ("command %", "$@5"),
+        ("command shift %", "$@5"),
+        ("command shift 5", "$@5"),
+        ("shift control 6", "^$6"),
+        ("shift-command-/", "@?"),
+        ("shift control \\", "^|"),
+        ("control \\", "^\\"),
+        ("command ?", "@?"),
+        ("command f", "@F"),
+        ("command option r", "~@R"),
+        ("⌘⌥⇧⌃r", "^~$@R"),
         ("command-shift-f", "$@F"),
         ("func 2", "*2"),
-        ("shift-command--", "$@_"),
+        ("command shift /", "@?"),
         ("control command  shift control H", "^$@H"),
         ("  command -", "@-"),
-        ("command command q", "@q"),
-        ("shift control \\", "^$|"),
-        ("H", "$H"),
+        ("command command q", "@Q"),
+        ("H", "H"),
+        ("shift h", "$H"),
+        ("command control R", "^@R"),
         ("shift p", "$P"),
-        ("shift 4", "$$"),
+        ("shift 4", "$4"),
         ("ctrl 6", "^6"),
-        ("shift control 6", "^$^"),
         ("command right", "@→"),
         ("control command del", "^@⌫"),
         ("shift ESCAPE", "$⎋"),
         ("F7", "f7"),
-    ]
-    for text, canonical in parsemap:
-        ks = KeyboardShortcut(text)
-        assert str(ks) == canonical
+])
+def test_ks_parse(inp, out):
+    ks = KeyboardShortcut(inp)
+    assert str(ks) == out
+
+# def test_ks_parse():
+#     parsemap = [
+#         ("command %", "$@5"),
+#         ("command shift %", "$@5"),
+#         ("command shift 5", "$@5"),
+#         ("shift-command-/", "@?"),
+#         ("command ?", "@?"),
+#         ("command f", "@F"),
+#         ("command option r", "~@R"),
+#         ("⌘⌥⇧⌃r", "^~$@R"),
+#         ("command-shift-f", "$@F"),
+#         ("func 2", "*2"),
+#         ("command shift /", "@?"),
+#         ("control command  shift control H", "^$@H"),
+#         ("  command -", "@-"),
+#         ("command command q", "@Q"),
+#         ("shift control \\", "^|"),
+#         ("H", "H"),
+#         ("shift h", "$H"),
+#         ("command control R", "^@R"),
+#         ("shift p", "$P"),
+#         ("shift 4", "$"),
+#         ("ctrl 6", "^6"),
+#         ("shift control 6", "^$^"),
+#         ("command right", "@→"),
+#         ("control command del", "^@⌫"),
+#         ("shift ESCAPE", "$⎋"),
+#         ("F7", "f7"),
+#     ]
+#     for text, canonical in parsemap:
+#         ks = KeyboardShortcut(text)
+#         assert str(ks) == canonical
 
 
 def test_ks_parse_error():
@@ -297,9 +440,10 @@ def test_ks_parse_error():
             ks = KeyboardShortcut(error)
 
 
-#def test_parse_empty():
+# def test_parse_empty():
 #    assert _parse_shortcuts("") == [""]
 
+# TODO figure out / verify Fn in plaintext and unicode
 
 def test_parse_3():
     assert len(_parse_shortcuts("F10 / shift-escape / control-option-right")) == 3
