@@ -156,16 +156,17 @@ class KeyboardShortcut:
         "rightclick": "rightclick",
         "rclick": "rightclick",
     }
-    # programatically add function keys to the map
+    _fkeys = []
+    # programatically add function keys
     for num in range(1, 100):
-        fkey = "f{}".format(num)
-        _keyname_map[fkey] = fkey
+        fkey = "F{}".format(num)
+        _fkeys.append(fkey)
 
     # - if found in this dictionary, the "key" has an associated html entity,
     #   friendly name, and/or text description
-    _keys = {
-        "⎋": Key("⎋", "Escape", "html escape"),
-    }
+    # _keys = {
+    #    "⎋": Key("⎋", "Escape", "html escape"),
+    # }
 
     # shifted key translations
     _unshifted_keys = r",./;'[]\1234567890-="
@@ -175,8 +176,9 @@ class KeyboardShortcut:
 
     # modifier -> name map
     _mod_name_map = {
-        '*': '',
+        "*": "",
     }
+
     def __init__(self, text):
         # mods is a string, key is also a string
         # if key is alphabetic, it's stored in upper
@@ -222,8 +224,9 @@ class KeyboardShortcut:
             if key in cls._shifted_keys:
                 # command % should be command shift 5
                 # but command ? should be command ?
-                if key in '!@#$%^&*()':
-                    mods.append('$') # duplicates will get removed later
+                # these ↓ are the shifted number keys
+                if key in "!@#$%^&*()":
+                    mods.append("$")  # duplicates will get removed later
                     key = key.translate(cls._to_unshifted_trans)
                 else:
                     mods = [mod for mod in mods if mod != "$"]
@@ -234,26 +237,20 @@ class KeyboardShortcut:
                     # a number or letter
                     # command shift 5 should remain command shift 5
                     # and command shift r should remain command shift r
-                    if re.match("[^0-9a-zA-Z]", key):
+                    if re.match(r"[^0-9a-zA-Z]", key):
                         # but command shift / should be command ?
                         # and shift control \ should be control |
                         key = key.translate(cls._to_shifted_trans)
                         mods = [mod for mod in mods if mod != "$"]
-                else:
-                    # the key is unshifted and we don't have shift
-                    # in the mods either
-                    # into their shifted equivilents and remove
-                    # shift from the shortcut
-                    # ie turn 'command shift /' into 'command ?'
-                    pass
-                    # if key in cls._unshifted_keys:
-                    #     key = key.translate(cls._to_shifted_trans)
-                    #     mods = [mod for mod in mods if mod != "$"]
-                # shortcuts always displayed with upper case letters
+            # shortcuts always displayed with upper case letters
             key = key.upper()
         else:
             if key.lower() in cls._keyname_map:
+                # special key names, pgup, etc are in lowercase
                 key = cls._keyname_map[key.lower()]
+            elif key.upper() in cls._fkeys:
+                # but function keys are in uppercase
+                key = key.upper()
             else:
                 raise ValueError("{} is not a valid key".format(key))
 
@@ -287,6 +284,7 @@ class KeyboardShortcut:
             return self._keys[self.key].name
         # this is for human consumption, and keys are always upper case
         return self.key.upper()
+
 
 def _parse_shortcuts(text):
     """parse a string or array of text into a standard representation of the shortcut
@@ -355,13 +353,16 @@ if __name__ == "__main__":
 # delete that function
 
 
-#def setup_module():
+# def setup_module():
 #    global pytest
 #    global mock
 #    import pytest
 #    import mock
 
-@pytest.mark.parametrize("inp, out", [
+
+@pytest.mark.parametrize(
+    "inp, out",
+    [
         ("command %", "$@5"),
         ("command shift %", "$@5"),
         ("command shift 5", "$@5"),
@@ -374,7 +375,9 @@ if __name__ == "__main__":
         ("command option r", "~@R"),
         ("⌘⌥⇧⌃r", "^~$@R"),
         ("command-shift-f", "$@F"),
-        ("func 2", "*2"),
+        ("func f2", "*F2"),
+        ("fn F13", "*F13"),
+        ("F7", "F7"),
         ("command shift /", "@?"),
         ("control command  shift control H", "^$@H"),
         ("  command -", "@-"),
@@ -388,11 +391,12 @@ if __name__ == "__main__":
         ("command right", "@→"),
         ("control command del", "^@⌫"),
         ("shift ESCAPE", "$⎋"),
-        ("F7", "f7"),
-])
+    ],
+)
 def test_ks_parse(inp, out):
     ks = KeyboardShortcut(inp)
     assert str(ks) == out
+
 
 # def test_ks_parse():
 #     parsemap = [
@@ -440,10 +444,8 @@ def test_ks_parse_error():
             ks = KeyboardShortcut(error)
 
 
-# def test_parse_empty():
-#    assert _parse_shortcuts("") == [""]
-
 # TODO figure out / verify Fn in plaintext and unicode
+
 
 def test_parse_3():
     assert len(_parse_shortcuts("F10 / shift-escape / control-option-right")) == 3
