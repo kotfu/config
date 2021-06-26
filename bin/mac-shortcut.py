@@ -1,10 +1,43 @@
 #!/usr/bin/env python3
 #
-# take practially any description of a mac shortcut and output
-# a standardized representation of it
+# take practially any description of a mac shortcut and output a standardized
+# representation of it
 #
-# Adapted from Brett Terpstra's kbd: https://github.com/ttscoff/JekyllPlugins/tree/master/KBDTag
+# Adapted from Brett Terpstra's kbd, a plugin for jekyll:
+# https://github.com/ttscoff/JekyllPlugins/tree/master/KBDTag
 #
+# This program implements the rules given in Apple's Style Guide under definition
+# "key, keys" (their links to this are crappy, so no link given)
+#
+# If you strictly followed the Style Guide, the keyboard shortcut to
+# take a screenshot would be Command-Shift-%. However, Apple never refers
+# to it this way, they use Command-Shift-5.
+# See https://support.apple.com/guide/mac-help/take-a-screenshot-or-screen-recording-mh26782/mac.
+# It appears the unwritten rule is that if the keyboard shortcut includes
+# one of the number keys and shift, instead of showing the symbol you show
+# the number. This program implements this unwritten rule.
+#
+# The HIG is in conflict with the style guide, https://developer.apple.com/design/human-interface-guidelines/macos/user-interaction/keyboard/:
+#
+#     For example, the keyboard shortcut for Help is
+#     Command-Question mark (?), not Shift-Command-Slash.
+#
+# According to the style guide, it should be Command-Shift-Question Mark
+#
+# This program implements the style guide plus the unwritten rule.
+#
+#
+# Sequences of multiple keystrokes can be entered by separating them
+# with a " / " (yes the spaces are required around the /). This syntax
+# was chosen because it's more likely and easier to enter "command shift F"
+# than command-shift-f
+#
+# When output in plain text, keys in a sequence are separated by a space
+# When output in html, each key in a sequence is in its own span
+
+
+
+
 # Use symbols for modifier keys (Command, Option, etc.).
 # Apple's guidelines say to spell them out in most cases,
 # but personally I prefer to use symbols.
@@ -67,7 +100,7 @@ def _build_parser():
         "-p",
         "--plus-sign",
         action="store_true",
-        help="output + between modifier symbols",
+        help="output + between modifier symbols, only used if -m",
     )
 
     parser.add_argument(
@@ -156,17 +189,36 @@ class KeyboardShortcut:
         "rightclick": "rightclick",
         "rclick": "rightclick",
     }
+    # programatically create 99 function keys
     _fkeys = []
-    # programatically add function keys
     for num in range(1, 100):
         fkey = "F{}".format(num)
         _fkeys.append(fkey)
 
     # - if found in this dictionary, the "key" has an associated html entity,
     #   friendly name, and/or text description
-    # _keys = {
-    #    "⎋": Key("⎋", "Escape", "html escape"),
-    # }
+    _keys = {
+        "-": Key("-", "Hyphen", "Hyphen"),
+        "⎋": Key("⎋", "Escape", "Escape??"),
+        "⇥": Key("⇥", "Tab", "Tab"),
+        "⇪": Key("⇪", "Caps Lock", "Caps Lock"),
+        "␣": Key("␣", "Space", "Space"),
+        "⏏": Key("⏏", "Eject", "Eject??"),
+        "⌫": Key("⌫", "Delete", "Delete"),
+        "⌦": Key("⌦", "Forward Delete", "Forward Delete"),
+        "↩": Key("↩", "Return", "Return"),
+        "⌤": Key("⌤", "Enter", "Enter"),
+        "⇞": Key("⇞", "Page Up", "Page Up"),
+        "⇟": Key("⇟", "Page Down", "Page Down"),
+        "↖": Key("↖", "Home", "Home"),
+        "↘": Key("↘", "End", "End"),
+        "←": Key("←", "Left Arrow", "Left Arrow"),
+        "→": Key("→", "Right Arrow", "Right Arrow"),
+        "↑": Key("↑", "Up Arrow", "Up Arrow"),
+        "↓": Key("↓", "Down Arrow", "Down Arrow"),
+        "leftclick": Key("leftclick", "click", "click"),
+        "rightclick": Key("rightclick", "right click", "right click"),
+    }
 
     # shifted key translations
     _unshifted_keys = r",./;'[]\1234567890-="
@@ -223,13 +275,13 @@ class KeyboardShortcut:
         if len(key) == 1:
             if key in cls._shifted_keys:
                 # command % should be command shift 5
-                # but command ? should be command ?
+                # and command ? should be command shift ?
                 # these ↓ are the shifted number keys
+                mods.append("$") # duplicates will get removed later
+                # the unwritten apple rule that shifted numbers are
+                # written as numbers not their symbols
                 if key in "!@#$%^&*()":
-                    mods.append("$")  # duplicates will get removed later
                     key = key.translate(cls._to_unshifted_trans)
-                else:
-                    mods = [mod for mod in mods if mod != "$"]
             else:
                 if "$" in mods:
                     # shift is in the mods, and the key is unshifted
@@ -237,11 +289,10 @@ class KeyboardShortcut:
                     # a number or letter
                     # command shift 5 should remain command shift 5
                     # and command shift r should remain command shift r
-                    if re.match(r"[^0-9a-zA-Z]", key):
-                        # but command shift / should be command ?
-                        # and shift control \ should be control |
+                    if key not in "0123456789":
+                        # but shift command / should be shift command ?
                         key = key.translate(cls._to_shifted_trans)
-                        mods = [mod for mod in mods if mod != "$"]
+
             # shortcuts always displayed with upper case letters
             key = key.upper()
         else:
@@ -320,7 +371,7 @@ def _render_txt(combos, args):
             tokens.append(combo.key_name)
         output.append(joiner.join(tokens))
 
-    return " / ".join(output)
+    return " ".join(output)
 
 
 def main(argv=None):
@@ -367,10 +418,11 @@ if __name__ == "__main__":
         ("command shift %", "$@5"),
         ("command shift 5", "$@5"),
         ("shift control 6", "^$6"),
-        ("shift-command-/", "@?"),
-        ("shift control \\", "^|"),
+        ("shift-command-/", "$@?"),
+        ("command shift /", "$@?"),
+        ("shift control \\", "^$|"),
         ("control \\", "^\\"),
-        ("command ?", "@?"),
+        ("command ?", "$@?"),
         ("command f", "@F"),
         ("command option r", "~@R"),
         ("⌘⌥⇧⌃r", "^~$@R"),
@@ -378,7 +430,6 @@ if __name__ == "__main__":
         ("func f2", "*F2"),
         ("fn F13", "*F13"),
         ("F7", "F7"),
-        ("command shift /", "@?"),
         ("control command  shift control H", "^$@H"),
         ("  command -", "@-"),
         ("command command q", "@Q"),
@@ -442,9 +493,6 @@ def test_ks_parse_error():
     for error in errors:
         with pytest.raises(ValueError):
             ks = KeyboardShortcut(error)
-
-
-# TODO figure out / verify Fn in plaintext and unicode
 
 
 def test_parse_3():
