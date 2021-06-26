@@ -57,6 +57,10 @@ import argparse
 import re
 import sys
 
+# Features to be added
+# - add a -t=mac, win option
+# -
+
 # to be removed later
 import pytest
 
@@ -378,7 +382,7 @@ def main(argv=None):
     """main function"""
     parser = _build_parser()
     args = parser.parse_args(argv)
-    print(args)
+    ##print(args)
     combos = _parse_shortcuts(" ".join(args.shortcuts))
 
     if args.output == "txt":
