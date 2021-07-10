@@ -17,5 +17,5 @@ do
 done
 
 if [ $LESSPIPE -eq 0 ]; then
-    log notice "install lesspipe for additional functionality"
+    logr notice "install lesspipe for additional functionality"
 fi
