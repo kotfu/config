@@ -15,7 +15,3 @@ do
         eval "$(SHELL=/bin/sh $LPIPE)"
     fi
 done
-
-if [ $LESSPIPE -eq 0 ]; then
-    logr notice "install lesspipe for additional functionality"
-fi

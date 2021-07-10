@@ -3,6 +3,6 @@
 # get run. This check is logr is loaded, and if not, loads it.
 
 type logr >/dev/null 2>&1
-if [[ $? == 1 ]]; then
+if [ $? -eq 1 ]; then
     source $CONFIG_DIR/lib/logr.bash
 fi

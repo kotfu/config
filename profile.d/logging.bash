@@ -3,4 +3,4 @@
 
 source $CONFIG_DIR/lib/logr.bash
 logr start profile
-logr "Logging configured"
+logr logging configured

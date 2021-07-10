@@ -57,6 +57,10 @@ you source the appropriate files in `~/config/`
 
 - [bat](https://github.com/sharkdp/bat) - a better cat
 - [lesspipe](https://github.com/wofr06/lesspipe) - less preprocessor
+- [delta](https://github.com/dandavison/delta) - better viewer for git and diff output
+- bash completion
+  - MacOS - `brew install bash-completion@2`
+
 
 ## Todo
 

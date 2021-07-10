@@ -16,7 +16,7 @@ fi
 export CONFIG_DIR
 
 # configure logging
-source $CONFIG_DIR/profile.d/logging.bash
+source $CONFIG_DIR/bashrc.d/logging.bash
 
 
 # a function to check if files exist in BASHRC_DIR and source them
