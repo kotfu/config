@@ -56,7 +56,7 @@ you source the appropriate files in `~/config/`
 ## Other packages to install
 
 - [bat](https://github.com/sharkdp/bat) - a better cat
-
+- [lesspipe](https://github.com/wofr06/lesspipe) - less preprocessor
 
 ## Todo
 
