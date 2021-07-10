@@ -2,6 +2,20 @@
 # set up less
 
 export PAGER=less
-export LESS='--hilite-search --ignore-case --jump-target=4 -Pless\: %f ?m(file %i of %m) .(-line %lb--?pb%pb\%:---.-?eeof:---.-)'
+export LESS='--raw-control-chars --hilite-search --ignore-case --jump-target=4 -Pless\: %f ?m(file %i of %m) .(-line %lb--?pb%pb\%:---.-?eeof:---.-)'
 
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+# potential names for lesspipe, later ones in the list will override
+LPIPES=(lesspipe.sh lesspipe)
+LESSPIPE=0
+for LPIPE in "${LPIPES[@]}"
+do
+    FULLPATH=$(which $LPIPE)
+    if [ $? -eq 0 ]; then
+        LESSPIPE=1
+        eval "$(SHELL=/bin/sh $LPIPE)"
+    fi
+done
+
+if [ $LESSPIPE -eq 0];
+    log notice "install lesspipe for additional functionality"
+fi
