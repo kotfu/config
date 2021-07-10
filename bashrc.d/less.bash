@@ -16,6 +16,6 @@ do
     fi
 done
 
-if [ $LESSPIPE -eq 0];
+if [ $LESSPIPE -eq 0]; then
     log notice "install lesspipe for additional functionality"
 fi
