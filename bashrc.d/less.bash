@@ -9,7 +9,7 @@ LPIPES=(lesspipe.sh lesspipe)
 LESSPIPE=0
 for LPIPE in "${LPIPES[@]}"
 do
-    FULLPATH=$(which $LPIPE)
+    FULLPATH=$(which $LPIPE 2>/dev/null)
     if [ $? -eq 0 ]; then
         LESSPIPE=1
         eval "$(SHELL=/bin/sh $LPIPE)"

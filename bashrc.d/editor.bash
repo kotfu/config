@@ -5,7 +5,7 @@ EDITORS=(zile emacs)
 
 for ED in "${EDITORS[@]}"
 do
-    FULLPATH=$(which $ED)
+    FULLPATH=$(which $ED 2>/dev/null)
     if [ $? -eq 0 ]; then
         alias ue=$FULLPATH
         export EDITOR=$FULLPATH
