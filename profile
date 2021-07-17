@@ -28,6 +28,8 @@ function _assure_in_path {
         if [[ ":$PATH:" != *":$TESTPATH:"* ]]; then
             PATH="$TESTPATH:$PATH"
             logr adding $TESTPATH to PATH
+        else
+            logr $TESTPATH already in PATH
         fi
     fi
 }
