@@ -31,6 +31,7 @@ function _bd_source {
 }
 
 # source our various config files
+_bd_source brew.bash
 _bd_source shellopts.bash
 _bd_source alias.bash
 _bd_source less.bash
