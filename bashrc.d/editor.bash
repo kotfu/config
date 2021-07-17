@@ -1,7 +1,7 @@
 #
-# set EDITOR, preferred choices are later in the list
+# set EDITOR, first one found in the list is the winner
 
-EDITORS=(zile emacs)
+EDITORS=(emacs zile vi)
 
 for ED in "${EDITORS[@]}"
 do
@@ -9,5 +9,6 @@ do
     if [ $? -eq 0 ]; then
         alias ue=$FULLPATH
         export EDITOR=$FULLPATH
+        break
     fi
 done
