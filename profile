@@ -18,13 +18,17 @@ export CONFIG_DIR
 # configure logging
 source $CONFIG_DIR/profile.d/logging.bash
 
-# prepend an entry to our path, making sure not to add duplicates
+# prepend an entry to our path
+# if the directory exists
+# making sure not to add duplicates
 function _assure_in_path {
     # we use 0 for true, or success, like most other shell commands
     local TESTPATH=$1
-    if [[ ":$PATH:" != *":$TESTPATH:"* ]]; then
-        PATH="$TESTPATH:$PATH"
-        logr adding $TESTPATH to PATH
+    if [ -d "$TESTPATH" ]; then
+        if [[ ":$PATH:" != *":$TESTPATH:"* ]]; then
+            PATH="$TESTPATH:$PATH"
+            logr adding $TESTPATH to PATH
+        fi
     fi
 }
 
@@ -42,6 +46,7 @@ function _pd_source {
 }
 
 # source our various config files
+_pd_source brew.bash
 _pd_source homebin.bash
 _pd_source pyenv.bash
 _pd_source rvm.bash
