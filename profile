@@ -18,6 +18,10 @@ export CONFIG_DIR
 # configure logging
 source $CONFIG_DIR/profile.d/logging.bash
 
+# set a base path
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+logr PATH=$PATH
+
 # prepend an entry to our path
 # if the directory exists
 # making sure not to add duplicates
