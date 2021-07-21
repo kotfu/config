@@ -7,9 +7,9 @@ if [[ $OSTYPE =~ linux* ]]; then
         USBC=/usr/share/bash-completion/bash_completion
         EBC=/etc/bash_completion
         if [ -f $USBC ]; then
-            . $USBC
+            source $USBC
         elif [ -f $EBC ]; then
-            . $EBC
+            source $EBC
         else
             logr verbose
             logr notice no system bash completions found
@@ -26,7 +26,7 @@ if [[ $OSTYPE =~ darwin* ]]; then
         if [ -n "$PS1" ]; then
             BC=$BREW_PREFIX/share/bash-completion/bash_completion
             if [ -f $BC ]; then
-                . $BC
+                source $BC
             else
                 logr verbose
                 logr notice no system bash completions found
@@ -38,6 +38,14 @@ if [[ $OSTYPE =~ darwin* ]]; then
 fi
 
 # TODO figure out where/how to get bash-completion for OpenBSD
+if [[ $OSTYPE =~ openbsd* ]]; then
+    if [ -n "$PS1" ]; then
+        BC=/usr/local/share/bash-completion/bash-completion
+        if [ -f $BC ]; then
+            source $BC
+        fi
+    fi
+fi
 
 # finally, do our own bash_completions
 for bc in "$CONFIG_DIR/bash_completion.d/*"; do
