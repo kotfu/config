@@ -40,9 +40,13 @@ fi
 # TODO figure out where/how to get bash-completion for OpenBSD
 if [[ $OSTYPE =~ openbsd* ]]; then
     if [ -n "$PS1" ]; then
-        BC=/usr/local/share/bash-completion/bash-completion
+        BC=/usr/local/share/bash-completion/bash_completion
         if [ -f $BC ]; then
             source $BC
+        else
+            logr verbose
+            logr notice no system bash completions found
+            logr quiet
         fi
     fi
 fi
