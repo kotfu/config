@@ -9,12 +9,6 @@ shopt -s extglob cdspell checkwinsize no_empty_cmd_completion
 # update $LINES and $COLUMNS
 shopt -s checkwinsize
 
-# set up shell history
-shopt -s histappend
-HISTSIZE=1000
-HISTFILESIZE=2000
-HISTCONTROL=ignoredups:ignorespace
-
 if [ $(whoami) == 'root' ]; then
     PS1="\h:\w# "
 else
