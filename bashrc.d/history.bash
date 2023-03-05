@@ -1,4 +1,6 @@
 # Synchronize history between bash sessions
+# from https://gist.github.com/jan-warchol/89f5a748f7e8a2c9e91c9bc1b358d3ec
+
 #
 # Make history from other terminals available to the current one. However,
 # don't mix all histories together - make sure that *all* commands from the
