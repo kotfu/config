@@ -52,6 +52,6 @@ if [[ $OSTYPE =~ openbsd* ]]; then
 fi
 
 # finally, do our own bash_completions
-for bc in "$CONFIG_DIR/bash_completion.d/*"; do
+for bc in "$CONFIG_DIR/bash_completion.d/*.bash"; do
     source $bc
 done

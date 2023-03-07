@@ -33,8 +33,11 @@ echo
 echo Configuring bd:
 rm -f bin/bd
 ln -s ../submodules/bd/bd bin/bd
+# remove bd because of a change we made on 7 Mar 2023
+# at some point in the future the single line below can be removed
 rm -f bash_completion.d/bd
-ln -s ../submodules/bd/bash_completion.d/bd bash_completion.d/bd
+rm -f bash_completion.d/bd.bash
+ln -s ../submodules/bd/bash_completion.d/bd bash_completion.d/bd.bash
 
 echo
 echo Configuring commacd:
