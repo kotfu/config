@@ -12,7 +12,7 @@ function _fdirs_removeblanks() {
 # go to a favorite directory
 function f() {
 	# TODO add --value= parameter with arguments
-	local GUMOPTS=("filter" "--no-fuzzy" "--placeholder='cd to ...'")
+	local GUMOPTS=("filter" "--no-fuzzy" "--placeholder=cd to ...")
 	if [[ -n "$THEME_FDIRS_TEXT" ]]; then
 		GUMOPTS+=("--text.foreground=$THEME_FDIRS_TEXT")
 	fi
@@ -61,7 +61,7 @@ function fa() {
 function frm() {
 	_fdirs_removeblanks
 	if [ $# -eq 0 ]; then
-		local GUMOPTS=("filter" "--no-fuzzy" "--placeholder='cd to ...'")
+		local GUMOPTS=("filter" "--no-fuzzy" "--placeholder=cd to ...")
 		if [[ -n "$THEME_FDIRS_TEXT" ]]; then
 			GUMOPTS+=("--text.foreground=$THEME_FDIRS_TEXT")
 		fi

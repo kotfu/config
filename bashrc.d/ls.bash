@@ -22,7 +22,7 @@ function la() {
         # local LSCMD="ls -alh --color=always"
 		# but on linux, they are not
 		# this incantation always shows dotfiles first
-		local LSCMD="(ls -lhd --color=always .* 2>/dev/null ; ls -l --color=always)"
+		local LSCMD="(ls -lhd --color=always .* 2>/dev/null ; ls -lh --color=always)"
     else
         if [[ "$@" =~ ^- ]]; then
 			# command line options include more options for ls
