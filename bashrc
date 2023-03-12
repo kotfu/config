@@ -49,3 +49,4 @@ _bd_source iterm2_shell_integration.bash
 _bd_source pyenv.bash
 _bd_source ls.bash
 _bd_source bash_completion.bash
+_bd_source themekit.bash
