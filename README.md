@@ -41,6 +41,24 @@ You'll need bash, and also the following command line tools:
 
 - git
 - curl
+- less
+- gum (used by fdirs and shell themekit)
+
+## Other packages to install
+
+- you need a [Nerd Font](https://www.nerdfonts.com/) - I typically use MesloLGL Nerd Font Mono and it's configured in iterm2 in Settings → Profiles → Text
+- [bat](https://github.com/sharkdp/bat) - a better cat
+- [lesspipe](https://github.com/wofr06/lesspipe) - less preprocessor
+- [delta](https://github.com/dandavison/delta) - better viewer for git and diff output
+- MacOS modern bash (it ships with an old version)
+  - `brew install bash`
+  - `brew install bash-completion@2`
+- duf
+- emacs
+- pyenv
+- gls on macos (brew install coreutils)
+- starship
+- shell-themekit
 
 
 ## Customizing
@@ -52,15 +70,6 @@ If you have anything that it unique to the current machine that you want to
 have run when you log in, put it in `~/.profile` or `~/.bashrc` before or after
 you source the appropriate files in `~/config/`
 
-
-## Other packages to install
-
-- [bat](https://github.com/sharkdp/bat) - a better cat
-- [lesspipe](https://github.com/wofr06/lesspipe) - less preprocessor
-- [delta](https://github.com/dandavison/delta) - better viewer for git and diff output
-- MacOS modern bash (it ships with an old version)
-  - `brew install bash`
-  - `brew install bash-completion@2`
 
 
 ## Todo
