@@ -35,6 +35,7 @@ function _bd_source {
 _bd_source brew.bash
 _bd_source shellopts.bash
 _bd_source prompt.bash
+_bd_source starship.bash
 _bd_source history.bash
 _bd_source alias.bash
 _bd_source less.bash
