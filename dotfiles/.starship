@@ -1,0 +1,6 @@
+#
+# starship.toml configuration file
+
+[ruby]
+# don't trigger this module for environment variables
+detect_variables = []
