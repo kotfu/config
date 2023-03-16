@@ -1,0 +1,23 @@
+# ignore some wierd apple stuff
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# zile backups
+*~
+
+# python stuff
+.python-version
+
+# ide
+.vscode

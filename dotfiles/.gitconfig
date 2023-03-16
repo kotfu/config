@@ -1,0 +1,15 @@
+[user]
+	name = kotfu
+	email = kotfu@kotfu.net
+[core]
+	excludesfile = ~/.gitignore_global
+[init]
+	defaultBranch = main
+[pager]
+	diff = delta
+	log = delta
+	reflog = delta
+	show = delta
+[delta]
+	syntax-theme = Monokai Extended
+	navigate = true
