@@ -24,7 +24,7 @@ function l () {
         fi
     fi
 
-	local LESSCMD="less --quit-at-eof --quit-if-one-screen"
+    local LESSCMD="less --quit-at-eof --quit-if-one-screen --tilde --no-init"
     eval "$LSCMD --color=always | grep -v '^total' | $LESSCMD"
 }
 
@@ -58,6 +58,6 @@ function la() {
         fi
     fi
 
-	local LESSCMD="less --quit-at-eof --quit-if-one-screen"
+    local LESSCMD="less --quit-at-eof --quit-if-one-screen --tilde --no-init"
     eval "$LSCMD | grep -v '^total' | $LESSCMD"
 }
