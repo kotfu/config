@@ -24,7 +24,7 @@ function l () {
         fi
     fi
 
-    local LESSCMD="| less --quit-at-eof --quit-if-one-screen --tilde"
+    local LESSCMD="| less --quit-at-eof --quit-if-one-screen --tilde --no-init"
     # openbsd less draws horribly if --quit-if-one-screen and if the
     # output is less than one screen long
     if [[ $OSTYPE =~ openbsd* ]]; then
@@ -65,7 +65,7 @@ function la() {
         fi
     fi
 
-    local LESSCMD="| less --quit-at-eof --quit-if-one-screen --tilde"
+    local LESSCMD="| less --quit-at-eof --quit-if-one-screen --tilde --no-init"
     # openbsd less draws horribly if --quit-if-one-screen and if the
     # output is less than one screen long
     if [[ $OSTYPE =~ openbsd* ]]; then
