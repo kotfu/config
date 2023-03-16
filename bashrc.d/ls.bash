@@ -9,6 +9,11 @@ function l () {
 		# ls that comes with macos
 		LS="gls"
 	fi
+	if [[ $OSTYPE =~ openbsd* ]]; then
+		# have to 'pkg_add coreutils' to get this
+		# openbsd ls doesn't have color support
+		LS="gls"
+	fi
     if [ $# -eq 0 ]; then
         local LSCMD="$LS -lh"
     else
@@ -29,6 +34,11 @@ function la() {
 		# have to `brew install coreutils` to get this
 		# we use gls because it's dircolors are more flexible than the
 		# ls that comes with macos
+		LS="gls"
+	fi
+	if [[ $OSTYPE =~ openbsd* ]]; then
+		# have to 'pkg_add coreutils' to get this
+		# openbsd ls doesn't have color support
 		LS="gls"
 	fi
     if [ $# -eq 0 ]; then

@@ -43,6 +43,7 @@ You'll need bash, and also the following command line tools:
 - curl
 - less
 - gum (used by fdirs and shell themekit)
+- coreutils package (macos and openbsd) - so you get color ls
 
 ## Other packages to install
 
@@ -56,7 +57,6 @@ You'll need bash, and also the following command line tools:
 - duf
 - emacs
 - pyenv
-- gls on macos (brew install coreutils)
 - starship
 - shell-themekit
 
