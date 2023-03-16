@@ -2,7 +2,7 @@
 # set up less
 
 export PAGER=less
-export LESS='--raw-control-chars --hilite-search --ignore-case --jump-target=4 -Pless\: %f ?m(file %i of %m) .(-line %lb--?pb%pb\%:---.-?eeof:---.-)'
+export LESS='--RAW-CONTROL-CHARS --hilite-search --ignore-case --jump-target=4 -Pless\: %f ?m(file %i of %m) .(-line %lb--?pb%pb\%:---.-?eeof:---.-)'
 
 # potential names for lesspipe, later ones in the list will override
 LPIPES=(lesspipe.sh lesspipe)
