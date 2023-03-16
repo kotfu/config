@@ -1,6 +1,22 @@
 #
 # starship.toml configuration file
 
+[username]
+style_root = 'red'
+style_user = 'yellow'
+format = '[$user]($style)@'
+
+[hostname]
+ssh_only = false
+style = 'fg:#FF6C1C'
+format = '[$hostname]($style):'
+
+[directory]
+truncate_to_repo = false
+style = 'fg:#09ECFF'
+truncation_symbol = "…/"
+#format = '[$path/]($style)[$read_only]($read_only_style) '
+
 [ruby]
 # don't trigger this module for environment variables
 detect_variables = []
