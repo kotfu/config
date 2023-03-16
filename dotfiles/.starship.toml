@@ -3,7 +3,7 @@
 
 [username]
 style_root = 'red'
-style_user = 'yellow'
+style_user = '#f7c635'
 format = '[$user]($style)@'
 
 [hostname]
