@@ -35,7 +35,6 @@ function _bd_source {
 _bd_source brew.bash
 _bd_source shellopts.bash
 _bd_source prompt.bash
-_bd_source starship.bash
 _bd_source history.bash
 _bd_source alias.bash
 _bd_source less.bash
@@ -51,3 +50,4 @@ _bd_source pyenv.bash
 _bd_source ls.bash
 _bd_source bash_completion.bash
 _bd_source themekit.bash
+_bd_source starship.bash

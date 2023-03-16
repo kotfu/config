@@ -17,6 +17,13 @@ style = 'fg:#09ECFF'
 truncation_symbol = "…/"
 #format = '[$path/]($style)[$read_only]($read_only_style) '
 
+[status]
+disabled = false
+style = 'red'
+map_symbol = true
+symbol = '💥'
+format = '[$symbol]($style)'
+
 [ruby]
 # don't trigger this module for environment variables
 detect_variables = []
