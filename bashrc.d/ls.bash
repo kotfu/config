@@ -31,8 +31,7 @@ function l () {
     # operating systems, so we only add it if it's openbsd
     if [[ $OSTYPE =~ openbsd* ]]; then
         LESSCMD+=" --clear-screen"
-    fi  
-    echo "$LSCMD --color=always | grep -v '^total' | $LESSCMD"
+    fi
     eval "$LSCMD --color=always | grep -v '^total' | $LESSCMD"
 }
 
@@ -73,7 +72,6 @@ function la() {
     # operating systems, so we only add it if it's openbsd
     if [[ $OSTYPE =~ openbsd* ]]; then
         LESSCMD+=" --clear-screen"
-    fi  
-    echo "$LSCMD | grep -v '^total' | $LESSCMD"
+    fi
     eval "$LSCMD | grep -v '^total' | $LESSCMD"
 }
