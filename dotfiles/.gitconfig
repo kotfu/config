@@ -1,15 +1,31 @@
 [user]
 	name = kotfu
 	email = kotfu@kotfu.net
+
 [core]
 	excludesfile = ~/.gitignore_global
+	pager = delta
+
 [init]
 	defaultBranch = main
+
 [pager]
 	diff = delta
 	log = delta
 	reflog = delta
 	show = delta
+
 [delta]
 	syntax-theme = Monokai Extended
 	navigate = true
+	light = false
+
+[interactive]
+	diffFilter = delta --color-only
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+
