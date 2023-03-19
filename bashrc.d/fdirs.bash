@@ -12,7 +12,12 @@ function _fdirs_removeblanks() {
 # go to a favorite directory
 function f() {
 	# TODO add --value= parameter with arguments
-	local GUMOPTS=("filter" "--no-fuzzy" "--placeholder=cd to ...")
+    local VALUE
+    if [ $# -gt 0 ]; then
+        VALUE="--value=$@"
+    fi
+
+	local GUMOPTS=("filter" "--no-fuzzy" "--placeholder=cd to ..." $VALUE)
 	if [[ -n "$THEME_FDIRS_TEXT" ]]; then
 		GUMOPTS+=("--text.foreground=$THEME_FDIRS_TEXT")
 	fi
@@ -24,7 +29,7 @@ function f() {
 	fi
 	if [[ -n "$THEME_FDIRS_MATCH" ]]; then
 		GUMOPTS+=("--match.foreground=$THEME_FDIRS_MATCH")
-	fi	
+	fi
 	local NEWDIR=$(cat "$FDIR_FILE" | gum "${GUMOPTS[@]}")
 	# expand tilde's in the directory
 	case "$NEWDIR" in "~"*)
@@ -38,6 +43,7 @@ function f() {
 # save a given directory, or the current directory as a favorite
 function fa() {
 	_fdirs_removeblanks
+    local FAIL=0
     if [ $# -eq 0 ]; then
 		# add the current directory as a favorite
 		# now replace $HOME with ~
@@ -48,10 +54,21 @@ function fa() {
 		# save the diven directories as favorites
 		local DIR
 		for DIR in "$@"; do
-			# replace $HOME with ~
-			local NEWFAV=${DIR/#$HOME/'~'}
-			# check if it's in the file, if not, then add it
-			grep -qxF "$NEWFAV" "$FDIR_FILE" || echo "$NEWFAV" >> "$FDIR_FILE"
+            # get the full path of the diretory
+            if [ -d "$DIR" ]; then
+                local NEWFAV=$(realpath "$DIR" 2>/dev/null)
+                # realpath removes trailing slashes, so no need
+                # to remove them here
+                if [ -n "$NEWFAV" ]; then
+                    # replace $HOME with ~
+                    NEWFAV=${NEWFAV/#$HOME/'~'}
+                    # check if it's in the file, if not, then add it
+                    grep -qxF "$NEWFAV" "$FDIR_FILE" || echo "$NEWFAV" >> "$FDIR_FILE"
+                fi
+            else
+                printf "fa: %s: no such file or directory\n" "$DIR"
+                return 1
+            fi
 		done
     fi
 	fls
@@ -73,7 +90,7 @@ function frm() {
 		fi
 		if [[ -n "$THEME_FDIRS_MATCH" ]]; then
 			GUMOPTS+=("--match.foreground=$THEME_FDIRS_MATCH")
-		fi	
+		fi
 		local RMFAV=$(cat $FDIR_FILE | gum "${GUMOPTS[@]}")
 		# slurp the file into a variable, so we don't read and write to the file at the same time
 		# and remove the matching directory before writing the file back out
@@ -83,14 +100,27 @@ function frm() {
 		# remove all given directories from favorites
 		local DIR
 		for DIR in "$@"; do
-			# replace $HOME with ~
-			local RMFAV=${DIR/#$HOME/'~'}
-			# slurp the file into a variable, so we don't read and write to the file at the same time
-			# and remove the matching directory before writing the file back out
-			local SLURP=$(cat $FDIR_FILE)
-			echo "$SLURP" | grep -xF -v "$RMFAV" > "$FDIR_FILE"
+            local RMFAV
+            if [ -d "$DIR" ]; then
+                RMFAV=$(realpath "$DIR" 2>/dev/null)
+            else
+                # the directory does't exist, we can't resolve it
+                # but we can still try and remove it from the favorites
+                RMFAV=$DIR
+            fi
+            if [ -n "$RMFAV" ]; then
+                # replace $HOME with ~
+                RMFAV=${RMFAV/#$HOME/'~'}
+                # remove trailing slashes
+                shopt -s extglob
+                RMFAV=${RMFAV%%+(/)}
+                # slurp the favorites file into a variable, so we don't read and write
+                # to the file at the same time, and remove the matching directory before
+                # writing the file back out
+    	    	local SLURP=$(cat $FDIR_FILE)
+	    	    echo "$SLURP" | grep -xF -v "$RMFAV" > "$FDIR_FILE"
+            fi
 		done
-		
 	fi
 	fls
 }
