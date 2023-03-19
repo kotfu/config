@@ -13,10 +13,10 @@
 MYNAME=$(basename $0)
 
 function usage() {
-    echo "usage: $MYNAME [-h] [-n] [-f] path"
+    echo "usage: $MYNAME [-h] [-n] [-f] [path]"
     echo
     echo "arguments:"
-    echo "  path      the path to resolve and shorten"
+    echo "  path      the path to resolve and shorten, if not given, '.' is used"
     echo
     echo "options:"
     echo "  -h, -?    show this help message and exit"
@@ -46,13 +46,12 @@ while getopts 'fnh?' OPT; do
 done
 shift "$(($OPTIND -1))"
 
-# we require a path
+# check the path, default to current directory if not given
 if [[ -z "$1" ]]; then
-    usage
-    exit 1
+    SOMEPATH=$PWD
+else
+    SOMEPATH=$1
 fi
-
-SOMEPATH="$1"
 
 # try and resolve the path, this will error if path doesn't exist
 if [[ "$EXISTOPT" = true ]]; then
@@ -63,7 +62,14 @@ if [[ "$EXISTOPT" = true ]]; then
         exit 1
     fi
 else
-    SHORTPATH=$SOMEPATH
+    # realpath removes trailing slashes, so we'll do that here to be consistent
+    # unless the path is /, then we don't want to remove the only slash
+    if [[ "$SOMEPATH" != "/" ]]; then
+        shopt -s extglob
+        SHORTPATH=${SOMEPATH%%+(/)}
+    else
+        SHORTPATH=$SOMEPATH
+    fi
 fi
 
 # if the requested path starts with the current working directory
