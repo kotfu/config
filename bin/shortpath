@@ -1,16 +1,77 @@
 #!/usr/bin/env bash
 #
 # output the shortest possible reference to the path
+#
+# without the -f option, the output could be relative to
+# the current directory
+#
+# with the -f option, it will be a full path, with ~
+# in place of your home directory
+#
+# if you don't want the tilde, use `realpath`
 
-if [ -z "$1" ]; then
-   echo
-   exit 0
+MYNAME=$(basename $0)
+
+function usage() {
+    echo "usage: $MYNAME [-h] [-n] [-f] path"
+    echo
+    echo "arguments:"
+    echo "  path      the path to resolve and shorten"
+    echo
+    echo "options:"
+    echo "  -h, -?    show this help message and exit"
+    echo "  -n        don't resolve the path; with -n you can shorten paths that"
+    echo "            do not exist"
+    echo "  -f        don't return a relative directory, ignored if -n is given"
+}
+
+
+FULLOPT=false
+EXISTOPT=true
+while getopts 'fnh?' OPT; do
+  case "$OPT" in
+    f)
+      FULLOPT=true
+      ;;
+
+    n)
+      EXISTOPT=false
+      ;;
+
+    ?|h)
+      usage
+      exit 0
+      ;;
+  esac
+done
+shift "$(($OPTIND -1))"
+
+# we require a path
+if [[ -z "$1" ]]; then
+    usage
+    exit 1
 fi
 
-SHORT=$1
+SOMEPATH="$1"
+
+# try and resolve the path, this will error if path doesn't exist
+if [[ "$EXISTOPT" = true ]]; then
+    SHORTPATH=$(realpath "$SOMEPATH" 2>/dev/null)
+    EXIT_CODE=$?
+    if [[ $EXIT_CODE -ne 0 ]]; then
+        echo $MYNAME: $SOMEPATH: no such file or directory
+        exit 1
+    fi
+else
+    SHORTPATH=$SOMEPATH
+fi
+
 # if the requested path starts with the current working directory
 # remove it
-SHORT=${SHORT#$PWD/}
+if [[ "$FULLOPT" = false ]]; then
+    SHORTPATH=${SHORTPATH#$PWD/}
+fi
 
 # now replace $HOME with ~
-echo ${SHORT/#$HOME/'~'}
+echo ${SHORTPATH/#$HOME/'~'}
+exit 0
