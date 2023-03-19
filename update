@@ -46,7 +46,7 @@ ln -s ../submodules/commacd/commacd.sh bashrc.d/commacd.sh
 
 echo
 echo Retrieving iterm2 shell integration:
-curl -L https://iterm2.com/misc/bash_startup.in \
+curl -L https://iterm2.com/shell_integration/bash \
 -o lib/iterm2_shell_integration.bash
 
 # macOS specific
