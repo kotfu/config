@@ -4,33 +4,60 @@
 export FDIR_FILE=~/.fdirs
 
 function _fdirs_removeblanks() {
-	# remove empty lines from $FDIR_FILE
+    # ensure the file exists and remove empty lines from it
+    if [[ ! -f "$FDIR_FILE" ]]; then
+        touch "$FDIR_FILE"
+    fi
 	local FDIRS=$(cat $FDIR_FILE)
 	echo "$FDIRS" | grep . > "$FDIR_FILE"
 }
 
 # go to a favorite directory
 function f() {
-	# TODO add --value= parameter with arguments
-    local VALUE
-    if [ $# -gt 0 ]; then
-        VALUE="--value=$@"
+    _fdirs_removeblanks
+    local NEWDIR=""
+    # they typed something on the command line
+    local REQUESTED="$1"
+    if [[ $# -gt 0 ]]; then
+        # if gum filter would autoselect if there was only a single
+        # option that matched what you passed in --value, then we
+        # wouldn't need the code in here. I've made a feature
+        # request, maybe someday in the future...
+
+        # replace $HOME with ~
+        REQUESTED=${REQUESTED/#$HOME/'~'}
+        # see if there is a single full-line match in the file
+        MATCHES=$(grep -cF "$REQUESTED" "$FDIR_FILE" )
+        if [[ $MATCHES -eq 1 ]]; then
+            # we got exactly one match, go get the new dir
+            NEWDIR=$(grep -F "$REQUESTED" "$FDIR_FILE" | head -1)
+        fi
     fi
 
-	local GUMOPTS=("filter" "--no-fuzzy" "--placeholder=cd to ..." $VALUE)
-	if [[ -n "$THEME_FDIRS_TEXT" ]]; then
-		GUMOPTS+=("--text.foreground=$THEME_FDIRS_TEXT")
-	fi
-	if [[ -n "$THEME_FDIRS_PROMPT" ]]; then
-		GUMOPTS+=("--prompt.foreground=$THEME_FDIRS_PROMPT")
-	fi
-	if [[ -n "$THEME_FDIRS_INDICATOR" ]]; then
-		GUMOPTS+=("--indicator.foreground=$THEME_FDIRS_INDICATOR")
-	fi
-	if [[ -n "$THEME_FDIRS_MATCH" ]]; then
-		GUMOPTS+=("--match.foreground=$THEME_FDIRS_MATCH")
-	fi
-	local NEWDIR=$(cat "$FDIR_FILE" | gum "${GUMOPTS[@]}")
+    if [[ -z "$NEWDIR" ]]; then
+        # we are going to have to prompt for it using `gum filter`
+        local VALUE=""
+        if [ -n "$REQUESTED" ]; then
+            VALUE="--value=$REQUESTED"
+        fi
+
+        local GUMOPTS=("filter" "--reverse" "--no-fuzzy" "--placeholder=cd to ..." $VALUE)
+        if [[ -n "$THEME_FDIRS_TEXT" ]]; then
+            GUMOPTS+=("--text.foreground=$THEME_FDIRS_TEXT")
+        fi
+        if [[ -n "$THEME_FDIRS_PROMPT" ]]; then
+            GUMOPTS+=("--prompt.foreground=$THEME_FDIRS_PROMPT")
+        fi
+        if [[ -n "$THEME_FDIRS_INDICATOR" ]]; then
+            GUMOPTS+=("--indicator.foreground=$THEME_FDIRS_INDICATOR")
+        fi
+        if [[ -n "$THEME_FDIRS_MATCH" ]]; then
+            GUMOPTS+=("--match.foreground=$THEME_FDIRS_MATCH")
+        fi
+        #echo cat "$FDIR_FILE" pipe gum "${GUMOPTS[@]}"
+        NEWDIR=$(cat "$FDIR_FILE" | gum "${GUMOPTS[@]}")
+    fi
+
 	# expand tilde's in the directory
 	case "$NEWDIR" in "~"*)
 		NEWDIR=${NEWDIR/#'~'/$HOME}
