@@ -54,7 +54,6 @@ function f() {
         if [[ -n "$THEME_FDIRS_MATCH" ]]; then
             GUMOPTS+=("--match.foreground=$THEME_FDIRS_MATCH")
         fi
-        #echo cat "$FDIR_FILE" pipe gum "${GUMOPTS[@]}"
         NEWDIR=$(cat "$FDIR_FILE" | gum "${GUMOPTS[@]}")
     fi
 
