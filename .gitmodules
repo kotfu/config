@@ -7,3 +7,6 @@
 [submodule "submodules/rmate-python"]
 	path = submodules/rmate-python
 	url = https://github.com/sclukey/rmate-python.git
+[submodule "submodules/fzf"]
+	path = submodules/fzf
+	url = https://github.com/junegunn/fzf.git

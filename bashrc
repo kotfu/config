@@ -6,10 +6,10 @@
 # source config/bashrc
 #
 
-if [ -z ${CONFIG_DIR+x} ]; then
+if [[ -z ${CONFIG_DIR+x} ]]; then
     CONFIG_DIR=~/config
 fi
-if [ ! -d $CONFIG_DIR ]; then
+if [[ ! -d $CONFIG_DIR ]]; then
     echo "Please set CONFIG_DIR in ~/.profile to point to the directory of the config repo"
     return
 fi
@@ -42,7 +42,7 @@ _bd_source man_colorizer.bash
 _bd_source clipboard.bash
 _bd_source editor.bash
 _bd_source commacd.sh
-_bd_source bashmarks.bash
+_bd_source fzf.bash
 _bd_source fdirs.bash
 _bd_source bd.bash
 _bd_source iterm2_shell_integration.bash
