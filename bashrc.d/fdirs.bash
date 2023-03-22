@@ -21,7 +21,7 @@ function _fdirs_removeblanks() {
 #
 # cd to a favorite directory, fuzzy searching your list of favorites
 function f() {
-    local FZFOPTS=("--scheme=path" "--pointer=•" "--info=hidden" "-i" "--no-sort")
+    local FZFOPTS=("--pointer=•" "--info=hidden" "-i" "--no-sort")
     FZFOPTS+=("--height=~40%" "--layout=reverse-list")
     FZFOPTS+=("--border" "--border-label=change directory to:" "--border-label-pos=3")
     # set colors
@@ -95,7 +95,7 @@ function fa() {
 # remove a favorite
 function frm() {
     _fdirs_removeblanks
-    local FZFOPTS=("--scheme=path" "--pointer=•" "--info=hidden" "-i" "--no-sort")
+    local FZFOPTS=("--pointer=•" "--info=hidden" "-i" "--no-sort")
     FZFOPTS+=("--height=~40%" "--layout=reverse-list")
     FZFOPTS+=("--border" "--border-label=remove favorite:" "--border-label-pos=3")
     # set colors
