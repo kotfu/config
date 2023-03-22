@@ -22,13 +22,21 @@ function _fdirs_removeblanks() {
 # cd to a favorite directory, fuzzy searching your list of favorites
 function f() {
     local FZFOPTS=("--scheme=path" "--pointer=•" "--info=hidden" "-i" "--no-sort")
-    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT")
+    FZFOPTS+=("--height=~40%" "--layout=reverse-list")
+    FZFOPTS+=("--border" "--border-label=change directory to:" "--border-label-pos=3")
+    # set colors
+    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT,label:$THEME_FDIRS_LABEL")
+    # the border
+    FZFOPTS+=("--color=border:$THEME_FDIRS_BORDER")
     # fg+ and bg+ are colors for the currently selected line
     FZFOPTS+=("--color=fg+:regular,bg+:regular:$THEME_FDIRS_SELECTED,gutter:-1")
-    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR")
+    # the indicator pointing to the selected item, and the prompt in front of the
+    # characters yous type
+    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR,prompt:$THEME_FDIRS_PROMPT")
+    # these are the characters you type
     FZFOPTS+=("--color=query:regular:$THEME_FDIRS_MATCH")
+    # hl is the highlighted characters that match the search
     FZFOPTS+=("--color=hl:regular:$THEME_FDIRS_MATCH,hl+:regular:$THEME_FDIRS_MATCH")
-    FZFOPTS+=("--color=prompt:$THEME_FDIRS_PROMPT")
     if [[ -n "$1" ]]; then
         # prime the pump with the argument, and tell fzf to select it if there
         # is exactly one match
@@ -88,17 +96,25 @@ function fa() {
 function frm() {
     _fdirs_removeblanks
     local FZFOPTS=("--scheme=path" "--pointer=•" "--info=hidden" "-i" "--no-sort")
-    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT")
+    FZFOPTS+=("--height=~40%" "--layout=reverse-list")
+    FZFOPTS+=("--border" "--border-label=remove favorite:" "--border-label-pos=3")
+    # set colors
+    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT,label:$THEME_FDIRS_LABEL")
+    # the border
+    FZFOPTS+=("--color=border:$THEME_FDIRS_BORDER")
     # fg+ and bg+ are colors for the currently selected line
     FZFOPTS+=("--color=fg+:regular,bg+:regular:$THEME_FDIRS_SELECTED,gutter:-1")
-    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR")
+    # the indicator pointing to the selected item, and the prompt in front of the
+    # characters yous type
+    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR,prompt:$THEME_FDIRS_PROMPT")
+    # these are the characters you type
     FZFOPTS+=("--color=query:regular:$THEME_FDIRS_MATCH")
+    # hl is the highlighted characters that match the search
     FZFOPTS+=("--color=hl:regular:$THEME_FDIRS_MATCH,hl+:regular:$THEME_FDIRS_MATCH")
-    FZFOPTS+=("--color=prompt:$THEME_FDIRS_PROMPT")
+
     if [[ -n "$1" ]]; then
-        # prime the pump with the argument, and tell fzf to select it if there
-        # is exactly one match
-        FZFOPTS+=("--query=$1" "--select-1")
+        # prime the pump with the argument
+        FZFOPTS+=("--query=$1")
     fi
     local RMDIR=$(cat "$FDIR_FILE" | fzf "${FZFOPTS[@]}")
 
@@ -108,7 +124,6 @@ function frm() {
         # writing the file back out
         local SLURP=$(cat $FDIR_FILE)
         echo "$SLURP" | grep -xF -v "$RMDIR" > "$FDIR_FILE"
-        fls
     else
         return 1
     fi

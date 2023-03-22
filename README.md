@@ -42,7 +42,7 @@ You'll need bash, and also the following command line tools:
 - git
 - curl
 - less
-- fzf (used for fdirs)
+- fzf
 - gum (used by shell themekit)
 - coreutils package (macos and openbsd) - so you get color ls
 
