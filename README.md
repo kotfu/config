@@ -42,7 +42,8 @@ You'll need bash, and also the following command line tools:
 - git
 - curl
 - less
-- gum (used by fdirs and shell themekit)
+- fzf (used for fdirs)
+- gum (used by shell themekit)
 - coreutils package (macos and openbsd) - so you get color ls
 
 ## Other packages to install
