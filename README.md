@@ -75,8 +75,9 @@ you source the appropriate files in `~/config/`
 
 ## Todo
 
+- make a standard env var for less options to make a minimal pager like we use for l or la
+- revise fzf keybindings
 - check out https://github.com/shyiko/dotfiles
 - get https://github.com/rupa/z?
 - https://github.com/clvv/fasd
-- https://github.com/junegunn/fzf - from brew?
 - local copy of lesspipe? https://github.com/wofr06/lesspipe
