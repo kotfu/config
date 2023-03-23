@@ -1,3 +1,6 @@
+;; turn off the menu bar
+(menu-bar-mode -1)
+
 ;; general theme settings
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (load-theme 'dracula t)
@@ -5,6 +8,8 @@
 ;; dracula theme related settings
 
 (setq dracula-enlarge-headings nil)
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
