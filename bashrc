@@ -34,6 +34,8 @@ function _bd_source {
 # the order matters so we don't use a glob
 _bd_source brew.bash
 _bd_source shellopts.bash
+# we need theme info available for other parts of the initialization to use
+_bd_source themekit.bash
 _bd_source prompt.bash
 _bd_source history.bash
 _bd_source alias.bash
@@ -49,5 +51,4 @@ _bd_source iterm2_shell_integration.bash
 _bd_source pyenv.bash
 _bd_source ls.bash
 _bd_source bash_completion.bash
-_bd_source themekit.bash
 _bd_source starship.bash
