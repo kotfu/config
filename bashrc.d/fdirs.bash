@@ -1,48 +1,45 @@
 #
 # aliases for managing favorite directories
+#
+# These aliases use fzf for the user interface. They all honor
+# the FZF_DEFAULT_OPTIONS environment variable for command line
+# options. They also look at the FDIRS_FZF_OPTS environment
+# variable for more fzf command line options.
+#
+# if you want to override the file where your favorite directories
+# are stored, just set $FDIRS_FILE before your source this file
+# the default is ~/.fdirs
+#
 
-# if you want to override the file to use to save your
-# favorite directories, just set $FDIR_FILE
-# before you source this
-if [[ -z $FDIR_FILE ]]; then
-    export FDIR_FILE=~/.fdirs
+if [[ -z $FDIRS_FILE ]]; then
+    export FDIRS_FILE=~/.fdirs
 fi
 
 #
 # ensure the file exists and remove empty lines from it
 function _fdirs_removeblanks() {
-    if [[ ! -f "$FDIR_FILE" ]]; then
-        touch "$FDIR_FILE"
+    if [[ ! -f "$FDIRS_FILE" ]]; then
+        touch "$FDIRS_FILE"
     fi
-	local FDIRS=$(cat $FDIR_FILE)
-	echo "$FDIRS" | grep . > "$FDIR_FILE"
+	local FDIRS=$(cat $FDIRS_FILE)
+	echo "$FDIRS" | grep . > "$FDIRS_FILE"
 }
 
 #
 # cd to a favorite directory, fuzzy searching your list of favorites
 function f() {
-    local FZFOPTS=("--pointer=•" "--info=hidden" "-i" "--no-sort")
-    FZFOPTS+=("--height=~40%" "--layout=reverse-list")
-    FZFOPTS+=("--border" "--border-label=change directory to:" "--border-label-pos=3")
-    # set colors
-    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT,label:$THEME_FDIRS_LABEL")
-    # the border
-    FZFOPTS+=("--color=border:$THEME_FDIRS_BORDER")
-    # fg+ and bg+ are colors for the currently selected line
-    FZFOPTS+=("--color=fg+:regular,bg+:regular:$THEME_FDIRS_SELECTED,gutter:-1")
-    # the indicator pointing to the selected item, and the prompt in front of the
-    # characters yous type
-    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR,prompt:$THEME_FDIRS_PROMPT")
-    # these are the characters you type
-    FZFOPTS+=("--color=query:regular:$THEME_FDIRS_MATCH")
-    # hl is the highlighted characters that match the search
-    FZFOPTS+=("--color=hl:regular:$THEME_FDIRS_MATCH,hl+:regular:$THEME_FDIRS_MATCH")
+    # collect default options
+    local FZFOPTS="${FZF_DEFAULT_OPTS:-} ${FDIRS_FZF_OPTS:-}"
+    # here on down overrides anything from the environment variables
+    FZFOPTS+=" --border-label='change directory to:' --border-label-pos=3"
     if [[ -n "$1" ]]; then
         # prime the pump with the argument, and tell fzf to select it if there
         # is exactly one match
-        FZFOPTS+=("--query=$1" "--select-1")
+        FZFOPTS+=" --query=$1 --select-1"
     fi
-    local NEWDIR=$(cat "$FDIR_FILE" | fzf "${FZFOPTS[@]}")
+    # fzf parses command line options a bit wierd, hard to make the quoting
+    # work right, so we use the trick of temporarily overriding FZF_DEFAULT_OPTS
+    local NEWDIR=$(cat "$FDIRS_FILE" | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
 
     if [[ -n $NEWDIR ]]; then
         # expand tilde's in the directory
@@ -66,7 +63,7 @@ function fa() {
 		# now replace $HOME with ~
 		local NEWFAV=${PWD/#$HOME/'~'}
 		# save it as a favorite if it doesn't exist already
-		grep -qxF "$NEWFAV" "$FDIR_FILE" || echo "$NEWFAV" >> "$FDIR_FILE"
+		grep -qxF "$NEWFAV" "$FDIRS_FILE" || echo "$NEWFAV" >> "$FDIRS_FILE"
     else
 		# save the diven directories as favorites
 		local DIR
@@ -80,7 +77,7 @@ function fa() {
                     # replace $HOME with ~
                     NEWFAV=${NEWFAV/#$HOME/'~'}
                     # check if it's in the file, if not, then add it
-                    grep -qxF "$NEWFAV" "$FDIR_FILE" || echo "$NEWFAV" >> "$FDIR_FILE"
+                    grep -qxF "$NEWFAV" "$FDIRS_FILE" || echo "$NEWFAV" >> "$FDIRS_FILE"
                 fi
             else
                 printf "fa: %s: no such file or directory\n" "$DIR"
@@ -95,35 +92,22 @@ function fa() {
 # remove a favorite
 function frm() {
     _fdirs_removeblanks
-    local FZFOPTS=("--pointer=•" "--info=hidden" "-i" "--no-sort")
-    FZFOPTS+=("--height=~40%" "--layout=reverse-list")
-    FZFOPTS+=("--border" "--border-label=remove favorite:" "--border-label-pos=3")
-    # set colors
-    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT,label:$THEME_FDIRS_LABEL")
-    # the border
-    FZFOPTS+=("--color=border:$THEME_FDIRS_BORDER")
-    # fg+ and bg+ are colors for the currently selected line
-    FZFOPTS+=("--color=fg+:regular,bg+:regular:$THEME_FDIRS_SELECTED,gutter:-1")
-    # the indicator pointing to the selected item, and the prompt in front of the
-    # characters yous type
-    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR,prompt:$THEME_FDIRS_PROMPT")
-    # these are the characters you type
-    FZFOPTS+=("--color=query:regular:$THEME_FDIRS_MATCH")
-    # hl is the highlighted characters that match the search
-    FZFOPTS+=("--color=hl:regular:$THEME_FDIRS_MATCH,hl+:regular:$THEME_FDIRS_MATCH")
-
+    # collect default options
+    local FZFOPTS="${FZF_DEFAULT_OPTS:-} ${FDIRS_FZF_OPTS:-}"
+    # here on down overrides anything from the environment variables
+    FZFOPTS+=" --border-label='remove favorite:' --border-label-pos=3"
     if [[ -n "$1" ]]; then
         # prime the pump with the argument
-        FZFOPTS+=("--query=$1")
+        FZFOPTS+=" --query=$1"
     fi
-    local RMDIR=$(cat "$FDIR_FILE" | fzf "${FZFOPTS[@]}")
+    local RMDIR=$(cat "$FDIRS_FILE" | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
 
     if [[ -n $RMDIR ]]; then
         # slurp the favorites file into a variable, so we don't read and write
         # to the file at the same time, and remove the matching directory before
         # writing the file back out
-        local SLURP=$(cat $FDIR_FILE)
-        echo "$SLURP" | grep -xF -v "$RMDIR" > "$FDIR_FILE"
+        local SLURP=$(cat $FDIRS_FILE)
+        echo "$SLURP" | grep -xF -v "$RMDIR" > "$FDIRS_FILE"
     else
         return 1
     fi
@@ -132,11 +116,11 @@ function frm() {
 #
 # edit the file
 function fe() {
-	$EDITOR $FDIR_FILE
+	$EDITOR $FDIRS_FILE
 }
 
 #
 # cat the file
 function fls() {
-	cat $FDIR_FILE | less --quit-at-eof --quit-if-one-screen
+	cat $FDIRS_FILE | less --quit-at-eof --quit-if-one-screen
 }
