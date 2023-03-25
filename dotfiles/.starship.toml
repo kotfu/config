@@ -1,6 +1,10 @@
 #
 # starship.toml configuration file
 
+[character]
+success_symbol = '[>](bright-green bold)'
+error_symbol = '[>](bright-red bold)'
+
 [username]
 style_root = 'red'
 style_user = '#f7c635'
@@ -18,7 +22,7 @@ truncation_symbol = "…/"
 #format = '[$path/]($style)[$read_only]($read_only_style) '
 
 [status]
-disabled = false
+disabled = true
 style = 'red'
 map_symbol = true
 symbol = '💥'
