@@ -35,7 +35,7 @@ function _bd_source {
 _bd_source brew.bash
 _bd_source shellopts.bash
 # we need theme info available for other parts of the initialization to use
-_bd_source themekit.bash
+_bd_source shell_themer.bash
 _bd_source prompt.bash
 _bd_source history.bash
 _bd_source alias.bash
