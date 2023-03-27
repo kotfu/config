@@ -36,8 +36,6 @@ cornflower_blue = "#49ace9" # misc
 #processor = "iterm"
 #style.foreground = "foreground"
 #style.background = "background"
-#style.foreground = "#ffffff"
-#style.background = "#444444"
 
 [domain.fzf]
 processor = "fzf"
@@ -105,6 +103,7 @@ opt.--border = "rounded"
 opt.--border-label = "command history"
 opt.--border-label-pos = "3"
 opt.--prompt = "🔍〙"
+opt.--info = "hidden"
 
 # styles
 style.gutter = "default"
