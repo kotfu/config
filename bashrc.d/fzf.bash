@@ -11,27 +11,6 @@
 # key bindings
 # source "$CONFIG_DIR/submodules/fzf/shell/key-bindings.bash"
 
-function __control_r_fzf_opts() {
-    local FZFOPTS=("--pointer=•" "--info=hidden" "-i" "--no-sort")
-    # "--height=~40%"
-#    FZFOPTS+=("--layout=reverse")
-    FZFOPTS+=("--border" "--border-label='command history'" "--border-label-pos=3")
-    # set colors
-    FZFOPTS+=("--color=fg:regular:$THEME_FDIRS_TEXT,label:$THEME_FDIRS_LABEL")
-    # the border
-    FZFOPTS+=("--color=border:$THEME_FDIRS_BORDER")
-    # fg+ and bg+ are colors for the currently selected line
-    FZFOPTS+=("--color=fg+:regular,bg+:regular:$THEME_FDIRS_SELECTED,gutter:-1")
-    # the indicator pointing to the selected item, and the prompt in front of the
-    # characters yous type
-    FZFOPTS+=("--color=pointer:$THEME_FDIRS_INDICATOR,prompt:$THEME_FDIRS_PROMPT")
-    # these are the characters you type
-    FZFOPTS+=("--color=query:regular:$THEME_FDIRS_MATCH")
-    # hl is the highlighted characters that match the search
-    FZFOPTS+=("--color=hl:regular:$THEME_FDIRS_MATCH,hl+:regular:$THEME_FDIRS_MATCH")
-    echo ${FZFOPTS[@]}
-}
-export FZF_CTRL_R_OPTS="$(__control_r_fzf_opts)"
 
 #     ____      ____
 #    / __/___  / __/
