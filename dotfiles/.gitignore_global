@@ -15,8 +15,7 @@ Icon
 
 # backups
 *~
-# have to escape the hashes so they don't get treated as comments
-\#*\#
+\#*#
 
 # python stuff
 .python-version
