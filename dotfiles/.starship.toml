@@ -2,8 +2,9 @@
 # starship.toml configuration file
 
 [character]
-success_symbol = '[>](bright-green bold)'
-error_symbol = '[>](bright-red bold)'
+format = '$symbol'
+success_symbol = '[\$〙](bright-green bold)'
+error_symbol = '[\$〙](bright-red bold)'
 
 [username]
 style_root = 'red'
