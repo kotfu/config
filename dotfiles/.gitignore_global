@@ -13,8 +13,9 @@ Icon
 .Spotlight-V100
 .Trashes
 
-# zile backups
+# backups
 *~
+\#*#
 
 # python stuff
 .python-version
