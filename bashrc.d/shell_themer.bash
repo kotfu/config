@@ -40,7 +40,7 @@ function theme-activate() {
 
 # (re)load the theme using shell-themer
 function theme-reload() {
-    source <(shell-themer)
+    source <(shell-themer generate)
 }
 
 theme-activate noctis-obscuro
