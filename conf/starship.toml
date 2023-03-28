@@ -1,10 +1,19 @@
 #
 # starship.toml configuration file
 
+continuation_prompt = '[〙](#16A3B6)'
+add_newline = true
+
+[jobs]
+symbol = '⚙️'
+# set the threshold so high we never see it
+number_threshold = 9
+
 [character]
 format = '$symbol'
-success_symbol = '[\$〙](bright-green bold)'
-error_symbol = '[\$〙](bright-red bold)'
+#success_symbol = '[\$〙](bright-green bold)'
+success_symbol = '[\$](#09ecff)[〙](#09ecff bold)'
+error_symbol = '[\$](#ffd700)[〙](#09ecff bold)'
 
 [username]
 style_root = 'red'
@@ -25,8 +34,9 @@ truncation_symbol = "…/"
 [status]
 disabled = true
 style = 'red'
-map_symbol = true
-symbol = '💥'
+map_symbol = false
+symbol = '^'
+success_symbol = '&'
 format = '[$symbol]($style)'
 
 [ruby]
