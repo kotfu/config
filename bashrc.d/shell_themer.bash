@@ -43,4 +43,4 @@ function theme-reload() {
     source <(shell-themer)
 }
 
-theme-activate dracula
+theme-activate noctis-obscuro
