@@ -40,7 +40,7 @@ function theme-activate() {
 
 # (re)load the theme using shell-themer
 function theme-reload() {
-    eval $(shell-themer)
+    source <(shell-themer)
 }
 
 theme-activate dracula
