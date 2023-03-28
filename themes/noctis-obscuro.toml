@@ -32,10 +32,10 @@ cyan = "#09ecff" # from starship
 cornflower_blue = "#49ace9" # misc
 
 # this seems to still have problems
-#[domain.iterm]
-#processor = "iterm"
-#style.foreground = "foreground"
-#style.background = "background"
+[domain.iterm]
+processor = "iterm"
+style.foreground = "foreground"
+style.background = "background"
 
 [domain.fzf]
 processor = "fzf"
@@ -50,19 +50,19 @@ colorbase = "dark"
 # opt."+i" = true --> +i
 # opt.--no-sort = false does not add anything to the output
 #opt.--border = "rounded"
-opt.--pointer = "•"
+opt.--pointer = "➤"
 #opt.--info = "hidden"
 #opt.--no-sort = true
-opt.--prompt = "〙"
+opt.--prompt = "🔍〙"
 opt.--bind = "ctrl-k:kill-line,ctrl-j:ignore,ctrl-u:unix-line-discard"
 
 style.text = "text"
 style.current_line = "current_line"
-style.label = "bright_cyan"
+style.label = "cyan"
 style.border = "dark_orange"
-style.info = "bright_cyan"
-style.prompt = "bright_green"
-style.pointer = "bright_cyan"
+style.info = "purple"
+style.prompt = "cyan"
+style.pointer = "purple"
 style.query = "pink"
 style.hl = "pink"
 style."hl+" = "pink"
@@ -76,10 +76,9 @@ processor = "fzf"
 environment_variable = "FDIRS_FZF_OPTS"
 
 opt.--border = "rounded"
-opt.--pointer = "•"
+#opt.--pointer = "•"
 opt.--info = "hidden"
 opt.--no-sort = true
-opt.--prompt = "🔍〙"
 opt."+i" = true
 opt.--height = "~40%"
 opt.--layout = "reverse-list"
@@ -102,7 +101,6 @@ environment_variable = "FZF_CTRL_R_OPTS"
 opt.--border = "rounded"
 opt.--border-label = "command history"
 opt.--border-label-pos = "3"
-opt.--prompt = "🔍〙"
 opt.--info = "hidden"
 
 # styles
