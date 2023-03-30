@@ -25,7 +25,6 @@ function theme-activate() {
         # fzf parses command line options a bit wierd, hard to make the quoting
         # work right, so we use the trick of temporarily overriding FZF_DEFAULT_OPTS
         local NEWTHEME=$(shell-themer themes | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
-
         if [[ -n $NEWTHEME ]]; then
             export THEME_FILE="$THEME_DIR/$NEWTHEME.toml"
         else
@@ -49,7 +48,9 @@ function theme-activate() {
 
 # (re)load the theme using shell-themer
 function theme-reload() {
-    source <(shell-themer generate)
+    # this process substitution outputs a blank line to stdout
+    # which bothers me, so I redirect it to devnull
+    source <(shell-themer generate) >/dev/null
 }
 
 theme-activate noctis-obscuro
