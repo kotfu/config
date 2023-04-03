@@ -69,20 +69,21 @@ style.executable_file = "medium_green"
 #[scope.gum]
 #environment.export.GUM_OPTS = " --cursor-foreground={dark_orange}"
 
-[scope.fzf]
+[scope.fzf-default]
 generator = "fzf"
 environment_variable = "FZF_DEFAULT_OPTS"
 # the base color scheme from fzf to use
 colorbase = "dark"
 
 opt.--pointer = "➤"
+opt.--marker = "✓"
 opt.--prompt = "🔍〙"
 opt.--bind = "ctrl-v:page-down,alt-v:page-up,ctrl-d:delete-char,ctrl-k:kill-line,ctrl-u:unix-line-discard,ctrl-j:ignore"
 #opt.--scrollbar = "⭥"
 #opt.--scrollbar = "⇕"
 #opt.--scrollbar = "⬧"
 opt.--scrollbar = "▐"
-
+opt.--no-mouse = true
 
 # these generate --color options for fzf
 style.text = "text"
@@ -92,6 +93,7 @@ style.border = "dark_orange"
 style.info = "purple"
 style.prompt = "cyan"
 style.pointer = "bright_green"
+style.marker = "cyan"
 style.scrollbar = "cornflower_blue"
 style.query = "pink"
 style.hl = "pink"
@@ -135,10 +137,10 @@ opt.--no-separator = true
 style.gutter = "default"
 
 
-[scope.fzf-c]
+[scope.fzf-cd]
 # set options for the c command included with fzf
 generator = "fzf"
-environment_variable = "FZF_ALT_C_OPTS"
+environment_variable = "FZF_CD_OPTS"
 
 opt.--border = "rounded"
 opt.--border-label = "change directory to:"
@@ -150,6 +152,54 @@ opt.--no-separator = true
 
 style.gutter = "default"
 
+environment.export.FZF_CD_COMMAND = """\
+    command find -L . -mindepth 1 \
+    \\( \
+        -fstype 'sysfs' \
+        -o -fstype 'devfs' \
+        -o -fstype 'devtmpfs' \
+        -o -fstype 'proc' \
+        -o -name '.rvm' \
+        -o -name '.pyenv' \
+        -o -name '.git' \
+        -o -name '.vscode' \
+        -o -name 'Library' \
+    \\) -prune \
+    -o -type d -print \
+    2> /dev/null | cut -b3-
+    """
+
+[scope.fzf-select]
+# set options for the
+generator = "fzf"
+environment_variable = "FZF_SELECT_OPTS"
+
+opt.--border = "rounded"
+opt.--border-label = "select file:"
+opt.--border-label-pos = "3"
+opt.--height = "~60%"
+opt.--layout = "reverse-list"
+opt.--info = "inline:〘"
+opt.--no-separator = true
+
+style.gutter = "default"
+
+environment.export.FZF_SELECT_COMMAND = """\
+    command find -L . -mindepth 1 \
+    \\( \
+        -fstype 'sysfs' \
+        -o -fstype 'devfs' \
+        -o -fstype 'devtmpfs' \
+        -o -fstype 'proc' \
+        -o -name '.rvm' \
+        -o -name '.pyenv' \
+        -o -name '.git' \
+        -o -name '.vscode' \
+        -o -name 'Library' \
+    \\) -prune \
+    -o -type f -print -o -type d -print -o -type l -print \
+    2> /dev/null | cut -b3-
+    """
 
 [scope.theme-activate]
 # for the theme-activate alias that's part of shell-themer

@@ -15,3 +15,5 @@ if [ $? -eq 0 ]; then
 else
     alias df='df -h'
 fi
+
+alias c=__fzf_cd__

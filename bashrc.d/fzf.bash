@@ -18,22 +18,15 @@
 #  / __/ / /_/ __/
 # /_/   /___/_/ key-bindings.bash
 #
-# - $FZF_TMUX_OPTS
-# - $FZF_CTRL_T_COMMAND
-# - $FZF_CTRL_T_OPTS
-# - $FZF_CTRL_R_OPTS
-# - $FZF_ALT_C_COMMAND
-# - $FZF_ALT_C_OPTS
 
-# Key bindings
-# ------------
+# same as function included with FZF, just renamed command and opts environment variables
 __fzf_select__() {
   local cmd opts
-  cmd="${FZF_CTRL_T_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+  cmd="${FZF_SELECT_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     -o -type f -print \
     -o -type d -print \
     -o -type l -print 2> /dev/null | cut -b3-"}"
-  opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_CTRL_T_OPTS-} -m"
+  opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_SELECT_OPTS-} -m"
   eval "$cmd" |
     FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) "$@" |
     while read -r item; do
@@ -54,11 +47,12 @@ fzf-file-widget() {
   READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 }
 
+# same as function included with fzf, just renamed command and opts environment variables
 __fzf_cd__() {
   local cmd opts dir
-  cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+  cmd="${FZF_CD_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     -o -type d -print 2> /dev/null | cut -b3-"}"
-  opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_ALT_C_OPTS-} +m"
+  opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_CD_OPTS-} +m"
   dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin cd -- %q' "$dir"
 }
 
@@ -82,20 +76,19 @@ __fzf_history__() {
 # Required to refresh the prompt after fzf
 bind -m emacs-standard '"\er": redraw-current-line'
 
-bind -m vi-command '"\C-z": emacs-editing-mode'
-bind -m vi-insert '"\C-z": emacs-editing-mode'
-bind -m emacs-standard '"\C-z": vi-editing-mode'
+#bind -m vi-command '"\C-z": emacs-editing-mode'
+#bind -m vi-insert '"\C-z": emacs-editing-mode'
+#bind -m emacs-standard '"\C-z": vi-editing-mode'
 
 # CTRL-R - Paste the selected command from history into the command line
 bind -m emacs-standard -x '"\C-r": __fzf_history__'
 bind -m vi-command -x '"\C-r": __fzf_history__'
 bind -m vi-insert -x '"\C-r": __fzf_history__'
 
-
-# CTRL-T - Paste the selected file path into the command line
-bind -m emacs-standard -x '"\C-t": fzf-file-widget'
-bind -m vi-command -x '"\C-t": fzf-file-widget'
-bind -m vi-insert -x '"\C-t": fzf-file-widget'
+# fzf defaults this to CTRL-T, I have changed it to CTRL-O
+bind -m emacs-standard -x '"\C-o": fzf-file-widget'
+bind -m vi-command -x '"\C-o": fzf-file-widget'
+bind -m vi-insert -x '"\C-o": fzf-file-widget'
 
 
 # ALT-C - cd into the selected directory
@@ -104,20 +97,3 @@ bind -m vi-insert -x '"\C-t": fzf-file-widget'
 #bind -m vi-insert '"\ec": "\C-z\ec\C-z"'
 
 fi
-
-
-# this is mostly the same as __fzf_cd__
-# I added some more directories to ignore
-function c ()
-{
-    local cmd opts dir excludes;
-    excludes="\\( -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' -o -name '.rvm' -o -name '.pyenv' -o -name '.git' -o -name '.vscode' -o -name 'Library' \\) -prune "
-    cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 ${excludes} -o -type d -print 2> /dev/null | cut -b3- | sort"}";
-    opts="--height ${FZF_TMUX_HEIGHT:-~60%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_ALT_C_OPTS-} +m";
-    if [[ -n "$1" ]]; then
-        # prime the pump with the argument, and tell fzf to select it if there
-        # is exactly one match
-        opts+=" --query=$1"
-    fi
-    dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && cd -- "$dir"
-}
