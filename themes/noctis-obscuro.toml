@@ -146,7 +146,6 @@ opt.--border-label-pos = "3"
 opt.--height = "~60%"
 opt.--layout = "reverse-list"
 opt.--info = "inline:〘"
-#opt.--no-scrollbar = true
 opt.--no-separator = true
 
 style.gutter = "default"

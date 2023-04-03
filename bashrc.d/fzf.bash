@@ -111,8 +111,8 @@ fi
 function c ()
 {
     local cmd opts dir excludes;
-    excludes="\\( -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' -o -name '.rvm' -o -name '.pyenv' -o -name '.git' -o -name 'Library' \\) -prune "
-    cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 ${excludes} -o -type d -print 2> /dev/null | cut -b3-"}";
+    excludes="\\( -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' -o -name '.rvm' -o -name '.pyenv' -o -name '.git' -o -name '.vscode' -o -name 'Library' \\) -prune "
+    cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 ${excludes} -o -type d -print 2> /dev/null | cut -b3- | sort"}";
     opts="--height ${FZF_TMUX_HEIGHT:-~60%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_ALT_C_OPTS-} +m";
     if [[ -n "$1" ]]; then
         # prime the pump with the argument, and tell fzf to select it if there
