@@ -7,7 +7,7 @@
 
 ;; dracula theme related settings
 
-(setq dracula-enlarge-headings nil)
+;; (setq dracula-enlarge-headings nil)
 
 
 (custom-set-variables
