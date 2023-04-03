@@ -50,7 +50,7 @@ function theme-activate() {
 function theme-reload() {
     # this process substitution outputs a blank line to stdout
     # which bothers me, so I redirect it to devnull
-    source <(shell-themer generate) >/dev/null
+    source <(shell-themer generate)
 }
 
 theme-activate noctis-obscuro
