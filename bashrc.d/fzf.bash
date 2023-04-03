@@ -99,19 +99,25 @@ bind -m vi-insert -x '"\C-t": fzf-file-widget'
 
 
 # ALT-C - cd into the selected directory
-bind -m emacs-standard '"\ec": " \C-b\C-k \C-u`__fzf_cd__`\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
-bind -m vi-command '"\ec": "\C-z\ec\C-z"'
-bind -m vi-insert '"\ec": "\C-z\ec\C-z"'
+#bind -m emacs-standard '"\ec": " \C-b\C-k \C-u`__fzf_cd__`\e\C-e\er\C-m\C-y\C-h\e \C-y\ey\C-x\C-x\C-d"'
+#bind -m vi-command '"\ec": "\C-z\ec\C-z"'
+#bind -m vi-insert '"\ec": "\C-z\ec\C-z"'
 
 fi
 
 
-
 # this is mostly the same as __fzf_cd__
+# I added some more directories to ignore
 function c ()
 {
-    local cmd opts dir;
-    cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune     -o -type d -print 2> /dev/null | cut -b3-"}";
-    opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_ALT_C_OPTS-} +m";
-    dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && builtin cd -- "$dir"
+    local cmd opts dir excludes;
+    excludes="\\( -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' -o -name '.rvm' -o -name '.pyenv' -o -name '.git' -o -name 'Library' \\) -prune "
+    cmd="${FZF_ALT_C_COMMAND:-"command find -L . -mindepth 1 ${excludes} -o -type d -print 2> /dev/null | cut -b3-"}";
+    opts="--height ${FZF_TMUX_HEIGHT:-~60%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_ALT_C_OPTS-} +m";
+    if [[ -n "$1" ]]; then
+        # prime the pump with the argument, and tell fzf to select it if there
+        # is exactly one match
+        opts+=" --query=$1"
+    fi
+    dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && cd -- "$dir"
 }
