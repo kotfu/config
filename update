@@ -73,7 +73,7 @@ fi
 echo
 echo -n Installing dotfiles:
 for FILE in $(ls -A dotfiles); do
-    echo -n $FILE
+    echo -n "~/$FILE "
     rm -f ~/$FILE
     ln -s $CONFIG_DIR/dotfiles/$FILE ~/$FILE
 done
@@ -82,9 +82,9 @@ echo
 echo
 echo -n Installing .config directories:
 for DIR in $(find dotconfig -type d -mindepth 1 -depth 1 -print | awk -F / '{ print $NF }'); do
-    echo -n $DIR
-#    rm -rf ~/.config/$DIR
-#    ln -s $CONFIG_DIR/dotconfig/$DIR ~/.config/$DIR
+    echo -n "~/.config/$DIR "
+    rm -rf ~/.config/$DIR
+    ln -s $CONFIG_DIR/dotconfig/$DIR ~/.config/$DIR
 done
 echo
 
