@@ -78,4 +78,10 @@ for FILE in $(ls -A dotfiles); do
 done
 
 echo
+echo Installing .config directories
+for DIR in $(find dotconfig -type d -mindepth 1 -depth 1 -print | awk -F / '{ print $NF }'); do
+    echo ln -s $CONFIG_DIR/dotconfig/$DIR ~/.config/$DIR
+done
+
+echo
 echo Update complete. Type \""source $SHORTPATH"\" to update your current shell.
