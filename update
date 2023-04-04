@@ -71,17 +71,22 @@ if [[ $OSTYPE =~ darwin* ]]; then
 fi
 
 echo
-echo Installing dotfiles:
+echo -n Installing dotfiles:
 for FILE in $(ls -A dotfiles); do
+    echo -n $FILE
     rm -f ~/$FILE
     ln -s $CONFIG_DIR/dotfiles/$FILE ~/$FILE
 done
+echo
 
 echo
-echo Installing .config directories
+echo -n Installing .config directories:
 for DIR in $(find dotconfig -type d -mindepth 1 -depth 1 -print | awk -F / '{ print $NF }'); do
-    echo ln -s $CONFIG_DIR/dotconfig/$DIR ~/.config/$DIR
+    echo -n $DIR
+#    rm -rf ~/.config/$DIR
+#    ln -s $CONFIG_DIR/dotconfig/$DIR ~/.config/$DIR
 done
+echo
 
 echo
 echo Update complete. Type \""source $SHORTPATH"\" to update your current shell.
