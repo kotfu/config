@@ -73,6 +73,10 @@ __fzf_history__() {
   fi
 }
 
+c() {
+    eval $(__fzf_cd__)
+}
+
 # Required to refresh the prompt after fzf
 bind -m emacs-standard '"\er": redraw-current-line'
 
