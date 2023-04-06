@@ -53,6 +53,11 @@ __fzf_cd__() {
   cmd="${FZF_CD_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     -o -type d -print 2> /dev/null | cut -b3-"}"
   opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_CD_OPTS-} +m"
+  if [[ -n "$1" ]]; then
+    # prime the pump with the argument(s), and tell fzf to select it if there
+    # is exactly one match
+    opts+=" --query='$@'"
+  fi
   dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin cd -- %q' "$dir"
 }
 
@@ -74,7 +79,7 @@ __fzf_history__() {
 }
 
 c() {
-    eval $(__fzf_cd__)
+    eval $(__fzf_cd__ $@)
 }
 
 # Required to refresh the prompt after fzf
