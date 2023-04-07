@@ -211,6 +211,7 @@ opt.--border-label = "activate theme:"
 opt.--border-label-pos = "3"
 opt.--info = "hidden"
 opt.--no-sort = true
+opt.--layout = "reverse-list"
 opt."+i" = true
 opt.--height = "~40%"
 

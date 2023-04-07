@@ -24,15 +24,12 @@ function theme-activate() {
         local FZFOPTS="${FZF_DEFAULT_OPTS:-} ${THEME_FZF_OPTS:-}"
         # fzf parses command line options a bit wierd, hard to make the quoting
         # work right, so we use the trick of temporarily overriding FZF_DEFAULT_OPTS
-        local NEWTHEME=$(shell-themer themes | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
+        local NEWTHEME=$(shell-themer list | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
         if [[ -n $NEWTHEME ]]; then
             export THEME_FILE="$THEME_DIR/$NEWTHEME.toml"
         else
             return 1
         fi
-    elif [[ -d "$1" ]]; then
-        # a directory given on the command line
-        export THEME_FILE=$1
     elif [[ -f "$THEME_DIR/$1" ]]; then
         # a theme name with toml, go find it in the themes directory
         export THEME_FILE="$THEME_DIR/$1"
