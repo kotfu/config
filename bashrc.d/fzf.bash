@@ -20,9 +20,9 @@
 #
 
 # same as function included with FZF, just renamed command and opts environment variables
-__fzf_select__() {
+__fzf_select_current__() {
   local cmd opts
-  cmd="${FZF_SELECT_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+  cmd="${FZF_SELECT_CURRENT_COMMAND:-"command find -L . -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
     -o -type f -print \
     -o -type d -print \
     -o -type l -print 2> /dev/null | cut -b3-"}"
@@ -30,7 +30,23 @@ __fzf_select__() {
   eval "$cmd" |
     FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) "$@" |
     while read -r item; do
-      printf '%q ' "$item"  # escape special chars
+      # printf '%q ' "$item"  # escape special chars
+      printf '%s ' "$item"
+    done
+}
+
+__fzf_select_home__() {
+  local cmd opts
+  cmd="${FZF_SELECT_HOME_COMMAND:-"command find -L ~ -mindepth 1 \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) -prune \
+    -o -type f -print \
+    -o -type d -print \
+    -o -type l -print 2> /dev/null | cut -b3-"}"
+  opts="--height ${FZF_TMUX_HEIGHT:-40%} --bind=ctrl-z:ignore --reverse ${FZF_DEFAULT_OPTS-} ${FZF_SELECT_OPTS-} -m"
+  eval "$cmd" |
+    FZF_DEFAULT_OPTS="$opts" $(__fzfcmd) "$@" |
+    while read -r item; do
+      # printf '%q ' "$item"  # escape special chars
+      printf '%s ' "$item"
     done
 }
 
@@ -41,8 +57,14 @@ __fzfcmd() {
     echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- " || echo "fzf"
 }
 
-fzf-file-widget() {
-  local selected="$(__fzf_select__ "$@")"
+fzf-select-current() {
+  local selected="$(__fzf_select_current__ "$@")"
+  READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
+  READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
+}
+
+fzf-select-home() {
+  local selected="$(__fzf_select_home__ "$@")"
   READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
   READLINE_POINT=$(( READLINE_POINT + ${#selected} ))
 }
@@ -95,9 +117,15 @@ bind -m vi-command -x '"\C-r": __fzf_history__'
 bind -m vi-insert -x '"\C-r": __fzf_history__'
 
 # fzf defaults this to CTRL-T, I have changed it to CTRL-O
-bind -m emacs-standard -x '"\C-o": fzf-file-widget'
-bind -m vi-command -x '"\C-o": fzf-file-widget'
-bind -m vi-insert -x '"\C-o": fzf-file-widget'
+bind -m emacs-standard -x '"\C-o": fzf-select-current'
+bind -m vi-command -x '"\C-o": fzf-select-current'
+bind -m vi-insert -x '"\C-o": fzf-select-current'
+
+# ALT-O or ESC-O to select from home dir instead of current dir
+bind -m emacs-standard -x '"\eo": fzf-select-home'
+bind -m vi-command -x '"\eo": fzf-select-home'
+bind -m vi-insert -x '"\eo": fzf-select-home'
+
 
 
 # ALT-C - cd into the selected directory
