@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# for macos only
+#
+# return 0 (meaning true) if the passed file is a bundle or package
+mdls -name kMDItemContentTypeTree "$1" | egrep -q '\"com.apple.(bundle|package)\"'
