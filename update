@@ -81,7 +81,7 @@ echo
 
 echo
 echo -n "Installing .config directories: "
-for DIR in $(find dotconfig -mindepth 1 -depth 1 -type d -print | awk -F / '{ print $NF }'); do
+for DIR in $(ls -A dotconfig); do
     echo -n "~/.config/$DIR "
     rm -rf ~/.config/$DIR
     ln -s $CONFIG_DIR/dotconfig/$DIR ~/.config/$DIR
