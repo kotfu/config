@@ -25,11 +25,6 @@ git submodule init
 git submodule update --recursive
 
 echo
-echo Configuration bashmarks:
-rm -f bashrc.d/bashmarks.bash
-ln -s ../submodules/bashmarks/bashmarks.sh bashrc.d/bashmarks.bash
-
-echo
 echo Configuring bd:
 rm -f bin/bd
 ln -s ../submodules/bd/bd bin/bd
