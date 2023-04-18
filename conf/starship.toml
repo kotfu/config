@@ -4,13 +4,21 @@
 continuation_prompt = '[〙](#16A3B6)'
 add_newline = true
 
+# format = """
+# $all\
+# $fill\
+# [〔](#09ecff) $username$hostname [〕](#09ecff)\
+# $line_break\
+# $jobs$character
+# """
 format = """
 $all\
 $fill\
-[〔](#09ecff) $username$hostname [〕](#09ecff)\
+$username$hostname\
 $line_break\
 $jobs$character
 """
+
 
 [fill]
 symbol = ' '
@@ -64,6 +72,13 @@ map_symbol = false
 symbol = '^'
 success_symbol = '&'
 format = '[$symbol]($style)'
+
+[git_branch]
+#style = '#a036f8'
+style = '#BE59FF'
+
+[git_status]
+style = 'red'
 
 [ruby]
 # don't trigger this module for environment variables
