@@ -51,7 +51,9 @@ format = '[$hostname]($style)'
 
 [directory]
 truncate_to_repo = false
-style = 'fg:#09ECFF'
+# cyan
+#style = 'fg:#09ecff'
+style = 'fg:#48e935'
 truncation_symbol = "…/"
 #format = '[$path/]($style)[$read_only]($read_only_style) '
 
