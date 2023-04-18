@@ -4,26 +4,49 @@
 continuation_prompt = '[〙](#16A3B6)'
 add_newline = true
 
+format = """
+$all\
+$fill\
+[\\[](#333333) $username$hostname [\\]](#333333)\
+$line_break\
+$jobs$character
+"""
+
+[fill]
+symbol = '─'
+style = 'fg:#333333'
+
 [jobs]
-symbol = '⚙️'
-# set the threshold so high we never see it
+# symbol = '⚙️'
+#symbol = '⏳'
+#symbol = '🪄 '
+#symbol = '💤'
+#symbol = '💫'
+#symbol = '⚡'
+symbol = '✨'
+style = 'yellow bold'
+# add some space after the symbol
+format = '[$symbol]($style)'
+# set the threshold for the number so high we never see it
+# we only want to see the sumbol
 number_threshold = 9
 
 [character]
 format = '$symbol'
 #success_symbol = '[\$〙](bright-green bold)'
-success_symbol = '[\$](#09ecff)[〙](#09ecff bold)'
-error_symbol = '[\$](#ffd700)[〙](#09ecff bold)'
+success_symbol = '[\$](#09ecff)[〙](#09ecff)'
+error_symbol = '[\$](#ffd700)[〙](#09ecff)'
 
 [username]
 style_root = 'red'
 style_user = '#f7c635'
-format = '[$user]($style)@'
+format = '[$user]($style)[@](#555555)'
 
 [hostname]
 ssh_only = false
-style = 'fg:#FF6C1C'
-format = '[$hostname]($style):'
+#style = 'bold fg:#031417 bg:#FF6C1C'
+style = 'fg:#ff6c1c'
+format = '[$hostname]($style)'
 
 [directory]
 truncate_to_repo = false
