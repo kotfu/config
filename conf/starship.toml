@@ -14,7 +14,7 @@ add_newline = true
 format = """
 $all\
 $fill\
-$username$hostname\
+$username$hostname \
 $line_break\
 $jobs$character
 """
@@ -79,6 +79,7 @@ style = '#BE59FF'
 
 [git_status]
 style = 'red'
+stashed = 's'
 
 [ruby]
 # don't trigger this module for environment variables
