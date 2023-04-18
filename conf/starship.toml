@@ -80,6 +80,7 @@ style = '#BE59FF'
 [git_status]
 style = 'red'
 stashed = 's'
+modified = 'm'
 
 [ruby]
 # don't trigger this module for environment variables
