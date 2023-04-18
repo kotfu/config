@@ -78,9 +78,25 @@ format = '[$symbol]($style)'
 style = '#BE59FF'
 
 [git_status]
-style = 'red'
+#style = 'red'
+format = '([\[](#777777)[$all_status](red)[$ahead_behind](yellow bold)[\]](#777777) )'
+#format = '([$all_status](red)[$ahead_behind](yellow bold) )'
 stashed = 's'
 modified = 'm'
+
+#ahead = '⬆'
+#ahead = '⋀'
+#ahead = '⏶'
+#ahead = '↪'
+ahead = '↗'
+#behind = '⬇'
+#behind = '⋁'
+#behind = '⏷'
+behind = '↘'
+#diverged = '⬍'
+#diverged = '⮃'
+diverged = '↔'
+#diverged = '<>'
 
 [ruby]
 # don't trigger this module for environment variables
