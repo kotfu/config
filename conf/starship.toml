@@ -7,13 +7,13 @@ add_newline = true
 format = """
 $all\
 $fill\
-[\\[](#333333) $username$hostname [\\]](#333333)\
+[〔](#09ecff) $username$hostname [〕](#09ecff)\
 $line_break\
 $jobs$character
 """
 
 [fill]
-symbol = '─'
+symbol = ' '
 style = 'fg:#333333'
 
 [jobs]
@@ -44,10 +44,10 @@ format = '[$user]($style)'
 
 [hostname]
 ssh_only = false
-ssh_symbol = '🌐'
+ssh_symbol = '@'
 #style = 'bold fg:#031417 bg:#FF6C1C'
 style = 'fg:#ff6c1c'
-format = '$ssh_symbol[$hostname]($style)'
+format = '[$ssh_symbol](#09ecff)[$hostname]($style)'
 
 [directory]
 truncate_to_repo = false
