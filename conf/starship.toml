@@ -40,14 +40,14 @@ error_symbol = '[\$](#ffd700)[〙](#09ecff)'
 [username]
 style_root = 'red'
 style_user = '#f7c635'
-format = '[$user]($style)'
+format = '[$user]($style)[@](#09ecff)'
 
 [hostname]
 ssh_only = false
-ssh_symbol = '@'
+#ssh_symbol = '@'
 #style = 'bold fg:#031417 bg:#FF6C1C'
 style = 'fg:#ff6c1c'
-format = '[$ssh_symbol](#09ecff)[$hostname]($style)'
+format = '[$hostname]($style)'
 
 [directory]
 truncate_to_repo = false
