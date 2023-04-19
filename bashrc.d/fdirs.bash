@@ -37,6 +37,9 @@ function f() {
         # is exactly one match
         FZFOPTS+=" --query=$1 --select-1"
     fi
+    if [[ ! -r "$FDIRS_FILE" ]]; then
+        echo f: "$FDIRS_FILE": file not found
+    fi
     # fzf parses command line options a bit wierd, hard to make the quoting
     # work right, so we use the trick of temporarily overriding FZF_DEFAULT_OPTS
     local NEWDIR=$(cat "$FDIRS_FILE" | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
