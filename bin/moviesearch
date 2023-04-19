@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd /Volumes/Data/Media || exit 1
+
+opts="${FZF_DEFAULT_OPTS-} -i --layout=reverse"
+if [[ -n "$1" ]]; then
+    opts+=" --query='$@'"
+fi
+find Movies MoviesA -print | FZF_DEFAULT_OPTS="$opts" fzf
