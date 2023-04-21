@@ -16,7 +16,7 @@ export THEME_DIR
 # variables to the "parent" shell
 
 # we don't want to do any of this theming stuff if it isn't an interactive shell
-if [[ ! $- == *i* ]]
+if [[ ! $- == *i* ]]; then
     return
 fi
 
