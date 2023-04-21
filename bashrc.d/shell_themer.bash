@@ -8,12 +8,17 @@ if [ -z ${THEME_DIR+x} ]; then
 fi
 if [ ! -d $THEME_DIR ]; then
     echo "Please set THEME_DIR in ~/.profile to point to the directory containing your theme files"
-    return
+    return 1
 fi
 export THEME_DIR
 
 # these have to be functions instead of scripts so they can add environment
 # variables to the "parent" shell
+
+# we don't want to do any of this theming stuff if it isn't an interactive shell
+if [[ ! $- == *i* ]]
+    return
+fi
 
 # activate a theme
 # theme-activate [FILE | theme_name]
