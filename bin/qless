@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# quick less, aka qless
+#
+# run less with some options to make it less visible/intrusive
+#
+# only show the less user interface if there is more than one page of results --quit-if-one-screen
+# let's you scroll off the end of less to exit --quit-at-eof
+# hides the ~ for blank lines --tilde
+# doesn't try to initialize the screen --no-init
+# makes long lines scroll off the right instead of wrapping --chop-long-lines
+#
+
+opts="--quit-at-eof --quit-if-one-screen --tilde --no-init --chop-long-lines"
+# openbsd less draws horribly if --quit-if-one-screen and if the
+# output is less than one screen long
+# adding --clear-screen fixes it, but it breaks output on other
+# operating systems, so we only add it if it's openbsd
+if [[ $OSTYPE =~ openbsd* ]]; then
+    opts+=" --clear-screen"
+fi
+less $opts
