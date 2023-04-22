@@ -24,15 +24,7 @@ function l () {
         fi
     fi
 
-    local LESSCMD="less --quit-at-eof --quit-if-one-screen --tilde --no-init --chop-long-lines"
-    # openbsd less draws horribly if --quit-if-one-screen and if the
-    # output is less than one screen long
-    # adding --clear-screen fixes it, but it breaks output on other
-    # operating systems, so we only add it if it's openbsd
-    if [[ $OSTYPE =~ openbsd* ]]; then
-        LESSCMD+=" --clear-screen"
-    fi
-    $LSCMD --color=always | grep -v '^total' | $LESSCMD
+    $LSCMD --color=always | grep -v '^total' | qless
 }
 
 function la() {
@@ -65,13 +57,5 @@ function la() {
         fi
     fi
 
-    local LESSCMD="less --quit-at-eof --quit-if-one-screen --tilde --no-init --chop-long-lines"
-    # openbsd less draws horribly if --quit-if-one-screen and if the
-    # output is less than one screen long
-    # adding --clear-screen fixes it, but it breaks output on other
-    # operating systems, so we only add it if it's openbsd
-    if [[ $OSTYPE =~ openbsd* ]]; then
-        LESSCMD+=" --clear-screen"
-    fi
-    $LSCMD | grep -v '^total' | $LESSCMD
+    $LSCMD | grep -v '^total' | qless
 }
