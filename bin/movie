@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+#
+
+MEDIADIR=/Volumes/Data/Media
+INDEXFILE="${MEDIADIR}/movies.tsv"
+
+cd "$MEDIADIR" || exit 1
+
+function usage() {
+    echo "usage: movie [index | search]"
+    exit 2
+}
+
+function build_index() {
+    find Movies MoviesA -type f -not -name '*.srt' -not -name '*.idx' -not -name '*.sub' \
+    -not -name '*.jpg' -print0 | \
+    # %s=size in bytes, %Y=last mod in seconds since epoch, %n=filename
+    xargs -0 -n1 gstat --format "%s %Y %n" | \
+    # human readable sizes
+    numfmt --field=1 --to=iec | \
+    cut -d " " -f 1,2,3- | \
+    while read size date file; do
+        movie=$(basename "$file")
+        # strip known suffixes from the movie name
+        movie=${movie%.mkv}
+        movie=${movie%.mp4}
+        movie=${movie%.m4v}
+        movie=${movie%.avi}
+        # make a tab seperated output, formatting the date to be yyyy-mm-dd
+        printf "%s\t%(%F)T\t%s\t%s\n" "$movie" "$date" "$size" "$file"
+    done | \
+    sort \
+    > "$INDEXFILE"
+}
+
+cmd="$1"
+if [[ -z "$1" ]]; then
+    usage
+elif [[ $cmd = "index" ]]; then
+    build_index
+elif [[ $cmd = "search" ]]; then
+    if [[ ! -f "$INDEXFILE" ]]; then
+        echo "building index..." >&2
+        build_index
+    fi
+    opts="${FZF_DEFAULT_OPTS-} -i --layout=reverse --border='rounded'"
+    opts+=" --border-label='Movies in $MEDIADIR' --border-label-pos=3"
+    opts+=" --header-lines=1 --delimiter='\000' --nth=1"
+    if [[ -n "$2" ]]; then
+        opts+=" --query='$@'"
+    fi
+    # add a header row
+    ( echo -e "Movie (year)\tDate\tSize\tFile" && \
+    cat "$INDEXFILE" ) | \
+    while IFS=$'\t' read -r movie date size file; do
+        # truncate movie to 70 characters
+        if [[ ${#movie} -gt 70 ]]; then
+            movie="${movie:0:69}…"
+        fi
+        # insert non-printing \000 characters in the string so fzf can
+        # limit the search based on these as a delimiter
+        printf "%-70s\000 %12s\000 %7s\n" "$movie" "$date" "$size"
+    done | \
+    FZF_DEFAULT_OPTS="$opts" fzf \
+    # we don't care about the output
+    > /dev/null
+else
+    usage
+fi
