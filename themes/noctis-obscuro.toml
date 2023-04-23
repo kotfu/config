@@ -99,7 +99,9 @@ style.query = "pink"
 style.hl = "pink"
 style."hl+" = "pink"
 style.spinner = "bright_green"
-
+style.header = "medium_green"
+# no color for the gutter
+style.gutter = "default"
 
 [scope.fdirs]
 # settings for aliases in fdirs, which uses fzf
