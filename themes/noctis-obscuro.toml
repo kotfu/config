@@ -30,6 +30,7 @@ blue_grey = "#16a3b6" # function
 #cyan = "#49d6e9" # support
 cyan = "#09ecff" # from starship
 cornflower_blue = "#49ace9" # misc
+hot_purple = "#f504f5" # cursor
 
 [scope.iterm]
 generator = "iterm"
@@ -39,7 +40,7 @@ style.background = "background"
 [scope.ls_colors]
 generator = "ls_colors"
 # clear all builtin styles
-clear_builtin = true
+# clear_builtin = true
 
 # set the style to use for each file type sequence matters here, the last thing to
 # match is the style that is applied. so if you put executable_file after setuid and
@@ -65,6 +66,62 @@ style.character_device = "pink"
 #style.sticky_other_writable = ""
 style.executable_file = "medium_green"
 #style.file_with_capability = ""
+
+[scope.exa_colors]
+generator = "exa_colors"
+# clear all builtin styles
+clear_builtin = true
+
+# set the style to use for each file type sequence matters here, the last thing to
+# match is the style that is applied. so if you put executable_file after setuid and
+# you have a file that is both, then the executable_file style will be the one that
+# shows up
+style.text = "default" # for non filename text
+style.file = "default"
+style.directory = "blue_grey"
+style.symlink = "light_green"
+#style.multi_hard_link = "bold sea_green2"
+# empty style is ignored, not rendered as 'default'
+style.pipe = "pink"
+style.socket = "pink"
+#style.door = ""
+style.block_device = "pink"
+style.character_device = "pink"
+#style.broken_symlink = ""
+#style.missing_symlink_target = ""
+#style.setuid = ""
+#style.setgid = ""
+#style.sticky = ""
+#style.other_writable = ""
+#style.sticky_other_writable = ""
+style.executable_file = "medium_green"
+#style.file_with_capability = ""
+# permissions
+style.perms_user_read = "grey"
+style.perms_user_write = "grey"
+style.perms_user_execute_files = "grey"
+style.perms_user_execute_directories = "grey"
+style.perms_suid_files = "pink"
+style.perms_sticky_directories = "pink"
+style.perms_group_read = "grey"
+style.perms_group_write = "grey"
+style.perms_group_execute = "grey"
+style.perms_other_read = "grey"
+style.perms_other_write = "pink"
+style.perms_other_execute = "grey"
+
+# user and group
+style.uu = "medium_green"
+style.un = "medium_green"
+style.gu = "medium_green"
+style.gn = "medium_green"
+# size number and size unit
+style.size_number = "purple"
+style.size_unit = "purple"
+# date/time
+style.date_time = "cornflower_blue"
+# dashes on perms and size
+style.punctuation = "grey"
 
 #[scope.gum]
 #environment.export.GUM_OPTS = " --cursor-foreground={dark_orange}"
