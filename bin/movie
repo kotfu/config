@@ -61,9 +61,9 @@ elif [[ $cmd = "search" ]]; then
         # limit the search based on these as a delimiter
         printf "%-70s\000 %12s\000 %7s\n" "$movie" "$date" "$size"
     done | \
-    FZF_DEFAULT_OPTS="$opts" fzf \
-    # we don't care about the output
-    > /dev/null
+    # launch fzf and direct the output to the bitbucket
+    FZF_DEFAULT_OPTS="$opts" fzf >/dev/null
+
 else
     usage
 fi
