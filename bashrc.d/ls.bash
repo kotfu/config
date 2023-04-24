@@ -1,7 +1,7 @@
 #
 # nice functions for listing files
 
-if which exa; then
+if which exa >/dev/null; then
     # exa is installed, use it
     function l () {
         local LS="exa -l --group --color=always"
