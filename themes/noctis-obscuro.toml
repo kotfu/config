@@ -109,7 +109,6 @@ style.perms_group_execute = "grey"
 style.perms_other_read = "grey"
 style.perms_other_write = "pink"
 style.perms_other_execute = "grey"
-
 # user and group
 style.uu = "medium_green"
 style.un = "medium_green"
