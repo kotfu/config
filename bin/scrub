@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# scrub apple quarantine and provenance attributes from an app dir
+
+xattr -d com.apple.quarantine "$@"
+xattr -d com.apple.provenance "$@"
