@@ -80,7 +80,7 @@ __fzf_cd__() {
     # is exactly one match
     opts+=" --query='$@'"
   fi
-  dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'builtin cd -- %q' "$dir"
+  dir=$(eval "$cmd" | FZF_DEFAULT_OPTS="$opts" $(__fzfcmd)) && printf 'cd -- %q' "$dir"
 }
 
 __fzf_history__() {
