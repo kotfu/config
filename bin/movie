@@ -12,6 +12,7 @@ function usage() {
 }
 
 function build_index() {
+    echo -n "building movie index from Movies and MoviesA..." >&2
     find Movies MoviesA -type f -not -name '*.srt' -not -name '*.idx' -not -name '*.sub' \
     -not -name '*.jpg' -print0 | \
     # %s=size in bytes, %Y=last mod in seconds since epoch, %n=filename
@@ -31,6 +32,7 @@ function build_index() {
     done | \
     sort \
     > "$INDEXFILE"
+    echo "done" >&2
 }
 
 cmd="$1"
@@ -40,7 +42,6 @@ elif [[ $cmd = "index" ]]; then
     build_index
 elif [[ $cmd = "search" ]]; then
     if [[ ! -f "$INDEXFILE" ]]; then
-        echo "building index..." >&2
         build_index
     fi
     opts="${FZF_DEFAULT_OPTS-} -i --layout=reverse --border='rounded'"
