@@ -30,9 +30,11 @@ yellow =  "#f1fa8c"
 
 
 [scope.ls_colors]
+generator = "environment_variables"
 environment.export.LS_COLORS = "$(vivid generate dracula)"
 
 [scope.bat]
+generator = "environment_variables"
 environment.export.BAT_THEME="Dracula"
 
 [scope.fzf]
