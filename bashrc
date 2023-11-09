@@ -52,3 +52,4 @@ _bd_source pyenv.bash
 _bd_source ls.bash
 _bd_source bash_completion.bash
 _bd_source starship.bash
+_bd_source yoink.bash
