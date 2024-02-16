@@ -10,6 +10,8 @@
 # doesn't try to initialize the screen --no-init
 # makes long lines scroll off the right instead of wrapping --chop-long-lines
 #
+# if --chop-long-lines actually chops lines, then less seems
+# to ignore --quit-if-one-screen
 
 opts="--quit-at-eof --quit-if-one-screen --tilde --no-init --chop-long-lines"
 # openbsd less draws horribly if --quit-if-one-screen and if the
