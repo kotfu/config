@@ -1,10 +1,10 @@
 #
 # nice functions for listing files
 
-if which exa >/dev/null 2>&1; then
-    # exa is installed, use it
+if which eza >/dev/null 2>&1; then
+    # eza is installed, use it
     function l () {
-        local LS="exa -l --group --color=always"
+        local LS="eza -l --group --color=always"
         if [ $# -eq 0 ]; then
             local LSCMD="$LS"
         else
@@ -21,11 +21,11 @@ if which exa >/dev/null 2>&1; then
     }
     function lt() {
         # list a tree
-        exa -l --group --tree --color=always "$@" | qless
+        eza -l --group --tree --color=always "$@" | qless
     }
     function la () {
         # for ls
-        local LS="exa -al --group --color=always"
+        local LS="eza -al --group --color=always"
         if [ $# -eq 0 ]; then
             local LSCMD="$LS"
         else
@@ -41,7 +41,7 @@ if which exa >/dev/null 2>&1; then
     }
     function lat () {
         # list a tree showing dotfiles
-        exa -al --group --tree --color=always "$@" | qless
+        eza -al --group --tree --color=always "$@" | qless
     }
 else
     # for ls
