@@ -116,8 +116,8 @@ disabled = true
 [azure]
 disabled = true
 
-[battery]
-disabled = true
+#[battery]
+#disabled = true
 
 [buf]
 disabled = true
