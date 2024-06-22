@@ -21,4 +21,4 @@ opts="--quit-at-eof --quit-if-one-screen --tilde --no-init --chop-long-lines"
 if [[ $OSTYPE =~ openbsd* ]]; then
     opts+=" --clear-screen"
 fi
-less $opts
+less $opts "$@"
