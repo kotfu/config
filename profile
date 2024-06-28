@@ -31,7 +31,7 @@ function _assure_in_path {
     if [ -d "$TESTPATH" ]; then
         if [[ ":$PATH:" != *":$TESTPATH:"* ]]; then
             PATH="$TESTPATH:$PATH"
-            logr adding $TESTPATH to PATH
+            logr prepending $TESTPATH to PATH
         else
             logr $TESTPATH already in PATH
         fi
@@ -52,8 +52,10 @@ function _pd_source {
 }
 
 # source our various config files
+# sequence is very important here
+#
+_pd_source visualstudiocode.bash
 _pd_source brew.bash
 _pd_source homebin.bash
-_pd_source pyenv.bash
 _pd_source rvm.bash
-_pd_source visualstudiocode.bash
+_pd_source pyenv.bash
