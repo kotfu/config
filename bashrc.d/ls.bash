@@ -17,11 +17,11 @@ if which eza >/dev/null 2>&1; then
                 local LSCMD="$LS -d $@"
             fi
         fi
-        $LSCMD | qless
+        $LSCMD | qless -r
     }
     function lt() {
         # list a tree
-        eza -l --group --tree --color=always "$@" | qless
+        eza -l --group --tree --color=always "$@" | qless -r
     }
     function la () {
         # for ls
@@ -37,11 +37,11 @@ if which eza >/dev/null 2>&1; then
                 local LSCMD="$LS -d $@"
             fi
         fi
-        $LSCMD | qless
+        $LSCMD | qless -r
     }
     function lat () {
         # list a tree showing dotfiles
-        eza -al --group --tree --color=always "$@" | qless
+        eza -al --group --tree --color=always "$@" | qless -r
     }
 else
     # for ls
@@ -68,7 +68,7 @@ else
             fi
         fi
 
-        $LSCMD --color=always | grep -v '^total' | qless
+        $LSCMD --color=always | grep -v '^total' | qless -r
     }
     function la() {
         # for ls
@@ -101,6 +101,6 @@ else
             fi
         fi
 
-        $LSCMD | grep -v '^total' | qless
+        $LSCMD | grep -v '^total' | qless -r
     }
 fi
