@@ -33,12 +33,12 @@ cornflower_blue = "#49ace9" # misc
 hot_purple = "#f504f5" # cursor
 
 [scope.iterm]
-generator = "iterm"
-style.foreground = "foreground"
-style.background = "background"
+agent = "iterm"
+#style.foreground = "foreground"
+#style.background = "background"
 
 [scope.ls_colors]
-generator = "ls_colors"
+agent = "ls_colors"
 # clear all builtin styles
 # clear_builtin = true
 
@@ -67,8 +67,9 @@ style.character_device = "pink"
 style.executable_file = "medium_green"
 #style.file_with_capability = ""
 
-[scope.exa_colors]
-generator = "exa_colors"
+[scope.eza]
+agent = "eza"
+environment_variable = "EZA_COLORS"
 # clear all builtin styles
 clear_builtin = true
 
@@ -76,7 +77,6 @@ clear_builtin = true
 # match is the style that is applied. so if you put executable_file after setuid and
 # you have a file that is both, then the executable_file style will be the one that
 # shows up
-style.text = "default" # for non filename text
 style.file = "default"
 style.directory = "blue_grey"
 style.symlink = "light_green"
@@ -127,7 +127,7 @@ style.punctuation = "grey"
 #environment.export.GUM_OPTS = " --cursor-foreground={dark_orange}"
 
 [scope.fzf-default]
-generator = "fzf"
+agent = "fzf"
 environment_variable = "FZF_DEFAULT_OPTS"
 # the base color scheme from fzf to use
 colorbase = "dark"
@@ -144,7 +144,7 @@ opt.--no-mouse = true
 
 # these generate --color options for fzf
 style.text = "text"
-style.current_line = "current_line"
+style.current-line = "current_line"
 style.label = "cyan"
 style.border = "dark_orange"
 style.info = "purple"
@@ -164,7 +164,7 @@ style.gutter = "default"
 # settings for aliases in fdirs, which uses fzf
 # fdirs adds FZF_DEFAULT_OPTS and then FDIRS_FZF_OPTS to the command line
 # before executing fzf, so you can override here anything from [scope.fzf]
-generator = "fzf"
+agent = "fzf"
 environment_variable = "FDIRS_FZF_OPTS"
 
 opt.--border = "rounded"
@@ -182,8 +182,8 @@ style.gutter = "default"
 # history search. that script adds FZF_DEFAULT_OPTS to the command line before
 # executing fzf. then it adds FZF_CTRL_R_OPTS to the command line. because
 # fzf has a last-option-on-the-command-line-wins logic flow, it means
-# that Control-R inherits anyt fzf options set in FZF_DEFAILT_OPTS
-generator = "fzf"
+# that Control-R inherits any fzf options set in FZF_DEFAILT_OPTS
+agent = "fzf"
 environment_variable = "FZF_CTRL_R_OPTS"
 
 opt.--border = "rounded"
@@ -198,10 +198,9 @@ style.gutter = "default"
 
 [scope.fzf-cd]
 # set options for the c command included with fzf
-generator = "fzf"
+agent = "fzf"
 environment_variable = "FZF_CD_OPTS"
 
-opt.--border = "rounded"
 opt.--border-label = "change directory to:"
 opt.--border-label-pos = "3"
 opt.--height = "~60%"
@@ -211,7 +210,11 @@ opt.--no-separator = true
 
 style.gutter = "default"
 
-environment.export.FZF_CD_COMMAND = """\
+[scope.fzf-cd-command]
+# set the find command used by fzf_cd to exclude
+# a bunch of directories
+agent = "environment_variables"
+export.FZF_CD_COMMAND = """\
     command find -L . -mindepth 1 \
     \\( \
         -fstype 'sysfs' \
@@ -226,11 +229,11 @@ environment.export.FZF_CD_COMMAND = """\
     \\) -prune \
     -o -type d -print \
     2> /dev/null | cut -b3-
-    """
+"""
 
 [scope.fzf-select]
 # set options for the fzf commands that find a directory/file
-generator = "fzf"
+agent = "fzf"
 environment_variable = "FZF_SELECT_OPTS"
 
 opt.--border = "rounded"
@@ -293,7 +296,7 @@ environment.export.FZF_SELECT_HOME_COMMAND = """\
 
 [scope.theme-activate]
 # for the theme-activate alias that's part of shell-themer
-generator = "fzf"
+agent = "fzf"
 environment_variable = "THEME_FZF_OPTS"
 
 opt.--border = "rounded"
