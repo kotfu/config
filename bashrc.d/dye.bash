@@ -2,15 +2,15 @@
 # set up shell-themer
 
 
-# this should be set when we initialize themekit
-if [ -z ${THEME_DIR+x} ]; then
-    THEME_DIR=$CONFIG_DIR/themes
+# this should be set when we initialize dye
+if [ -z ${DYE_DIR+x} ]; then
+    DYE_DIR=$CONFIG_DIR/dye
 fi
-if [ ! -d $THEME_DIR ]; then
-    echo "Please set THEME_DIR in ~/.profile to point to the directory containing your theme files"
+if [ ! -d $DYE_DIR ]; then
+    echo "Please set DYE_DIR in ~/.profile to point to the directory containing your theme files"
     return 1
 fi
-export THEME_DIR
+export DYE_DIR
 
 # these have to be functions instead of scripts so they can add environment
 # variables to the "parent" shell
