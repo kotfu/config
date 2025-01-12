@@ -1,5 +1,5 @@
 #
-# set up shell-themer
+# set up dye https://dye-your-shell.net
 
 
 # this should be set when we initialize dye
@@ -20,39 +20,37 @@ if [[ ! $- == *i* ]]; then
     return
 fi
 
-# activate a theme
-# theme-activate [FILE | theme_name]
-function theme-activate() {
+# dye a pattern
+# dye-pattern [FILE | theme_name]
+function dye-pattern() {
 
     if [[ -z "$1" ]]; then
         # collect default options
         local FZFOPTS="${FZF_DEFAULT_OPTS:-} ${THEME_FZF_OPTS:-}"
         # fzf parses command line options a bit wierd, hard to make the quoting
         # work right, so we use the trick of temporarily overriding FZF_DEFAULT_OPTS
-        local NEWTHEME=$(shell-themer list | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
-        if [[ -n $NEWTHEME ]]; then
-            export THEME_FILE="$THEME_DIR/$NEWTHEME.toml"
+        local NEWPAT=$(shell-themer list | FZF_DEFAULT_OPTS="$FZFOPTS" fzf)
+        if [[ -n $NEWPAT ]]; then
+            export DYE_PATTERN_FILE="$DYE_DIR/$NEWPAT.toml"
         else
             return 1
         fi
-    elif [[ -f "$THEME_DIR/$1" ]]; then
-        # a theme name with toml, go find it in the themes directory
-        export THEME_FILE="$THEME_DIR/$1"
-    elif [[ -f "$THEME_DIR/$1.toml" ]]; then
+    elif [[ -f "$DYE_DIR/$1" ]]; then
+        # a pattern name with toml, go find it in the dye directory
+        export DYE_PATTERN_FILE="$DYE_DIR/$1"
+    elif [[ -f "$DYE_DIR/$1.toml" ]]; then
         # a bare theme name
-        export THEME_FILE="$THEME_DIR/$1.toml"
+        export DYE_PATTERN_FILE="$DYE_DIR/$1.toml"
     else
-        printf "%s: theme not found\n" "$1"
+        printf "%s: pattern not found\n" "$1"
         return 1
     fi
-    theme-reload
+    dye-apply
 }
 
-# (re)load the theme using shell-themer
-function theme-reload() {
-    # this process substitution outputs a blank line to stdout
-    # which bothers me, so I redirect it to devnull
-    source <(shell-themer activate)
+# (re)apply the theme using dye
+function dye-apply() {
+    source <(dye apply)
 }
 
-theme-activate noctis-obscuro
+dye-pattern noctis-obscuro

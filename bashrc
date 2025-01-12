@@ -34,8 +34,9 @@ function _bd_source {
 # the order matters so we don't use a glob
 _bd_source brew.bash
 _bd_source shellopts.bash
-# we need theme info available for other parts of the initialization to use
-_bd_source shell_themer.bash
+# we need dye pattern and them info available for other parts
+# of the initialization to use
+_bd_source dye.bash
 _bd_source prompt.bash
 _bd_source history.bash
 _bd_source alias.bash

@@ -4,7 +4,7 @@
 name = "dracula"
 type = "dark"
 
-[palette]
+[colors]
 # these names and colors typically come from whoever designed
 # the color palette
 #
@@ -21,12 +21,12 @@ purple = '#bd93f9'
 red = '#ff5555'
 yellow = '#f1fa8c'
 
-[map]
+[styles]
 # map the colors above into the shell-themer standard elements
 # everything on the lefthand side here should have a value assigned
 
 # standard foreground color
-foreground = 'foreground'
+foreground = '{{colors.foreground}}'
 # high, medium, and low contrast with background
 #
 # for a dark theme high should be the closest
@@ -37,12 +37,12 @@ foreground = 'foreground'
 #
 # if you don't wanna mess with this, just make them all
 # be the same as foreground
-foreground_high = 'foreground'
-foreground_medium = 'foreground'
-foreground_low = 'foreground'
+foreground_high = '{{styles.foreground}}'
+foreground_medium = '{{styles.foreground}}'
+foreground_low = '{{styles.foreground}}'
 
 # standard background color
-background = 'background'
+background = '{{colors.background}}'
 # high, medium, and low contrast with foreground
 #
 # for a dark theme high should be the closest
@@ -53,9 +53,9 @@ background = 'background'
 #
 # if you don't wanna mess with this, just make them all
 # be the same as background
-background_high = 'background'
-background_medium = 'background'
-background_low = 'background'
+background_high = '{{styles.background}}'
+background_medium = '{{styles.background}}'
+background_low = '{{styles.background}}'
 
 # these are the 12 colors in an RGB color wheel
 # primary colors: red, yellow, blue
@@ -70,17 +70,17 @@ background_low = 'background'
 #
 # these are useful for having directories displayed in green
 # no matter what shade of green is in the palette
-red = "red"
-orange = "orange"
-yellow = "yellow"
+red = "{{colors.red}}"
+orange = "{{colors.orange}}"
+yellow = "{{colors.yellow}}"
 chartreuse_green = ""
-green = "green"
+green = "{{colors.green}}"
 spring_green = ""
-cyan = "cyan"
+cyan = "{{colors.cyan}}"
 azure = ""
 blue = ""
-violet = "purple"
-magenta = "pink"
+violet = "{{colors.purple}}"
+magenta = "{{colors.pink}}"
 rose = ""
 
 # if you don't specify tints and shades, they will be automatically
@@ -122,12 +122,11 @@ color6 = ""
 
 # text is always the standard foreground color on the
 # standard background color
-text = 'foreground on background'
-text_dim = 'foreground_medium on background'
+text = '{{colors.foreground}} on {{colors.background}}'
 
 # think of it the same as the current line in many coding
 # themes. You probably want to use this in fzf
-highlighted_line = 'foreground on background_medium'
+#highlighted_line = '{{colors.foreground}} on {{colors.background_medium}}'
 
 #
-selected_line = ''
+#selected_line = ''
