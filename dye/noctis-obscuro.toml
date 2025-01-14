@@ -37,8 +37,8 @@ agent = "iterm"
 #style.foreground = "foreground"
 #style.background = "background"
 
-[scopes.ls_colors]
-agent = "ls_colors"
+[scopes.gnu_ls]
+agent = "gnu_ls"
 # clear all builtin styles
 # clear_builtin = true
 
