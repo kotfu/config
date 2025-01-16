@@ -54,14 +54,16 @@ format = '[$user]($style)[@](#999999)'
 ssh_only = false
 #ssh_symbol = '@'
 #style = 'bold fg:#031417 bg:#FF6C1C'
-style = 'fg:#ff6c1c'
+#style = 'fg:#ff6c1c' # orange
+style = 'fg:#48e935' # green
 format = '[$hostname]($style)'
 
 [directory]
 truncate_to_repo = false
 # cyan
 #style = 'fg:#09ecff'
-style = 'fg:#48e935'
+#style = 'fg:#48e935' # green
+style = 'fg:#ff6c1c' # orange
 truncation_symbol = "…/"
 #format = '[$path/]($style)[$read_only]($read_only_style) '
 
